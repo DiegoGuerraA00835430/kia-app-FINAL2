@@ -32,7 +32,7 @@ exports.crearUsuario = async (req, res) =>
     const { nombre, cargo, numero_empleado, contrasena } = req.body;
     console.log(req.body);
     try {
-        if(!nombre || !cargo || !numero_empleado || !contrasena) {
+        if(!nombre || !numero_empleado || !contrasena) {
             return res.status(400).send('Faltan campos requeridos');
         }
     

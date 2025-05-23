@@ -65,5 +65,47 @@ exports.crearManifiesto = async (req, res) => {
         res.status(500).json({ error: 'Error al crear el manifiesto' });
     }
 
-};
+    const manifiestoCompleto = await Manifesto.findByPk(nuevoManifiesto.id, {
+      include: [
+        {
+          model: Residuo,
+          as: 'residuo',
+          attributes: ['nombre_residuo', 'fecha_ingreso', 'cantidad']
+        },
+        {
+          model: Usuario,
+          as: 'empleado',
+          attributes: ['nombre', 'numero_empleado']
+        },
+        {
+          model: Proveedor,
+          as: 'proveedorDestino',
+          attributes: ['nombre', 'tipo_proveedor']
+        },
+        {
+          model: Proveedor,
+          as: 'proveedorTransporte',
+          attributes: ['nombre', 'tipo_proveedor']
+        },
+        {
+          model: Manejo,
+          as: 'manejo',
+          attributes: ['tipo_manejo']
+        },
+        {
+          model: Proceso,
+          as: 'proceso',
+          attributes: ['nombre_proceso']
+        }
+      ]
+    });
+
+    res.status(201).json({
+      mensaje: 'Manifiesto creado correctamente',
+      manifiesto: manifiestoCompleto
+    });
+    
+
+
+}
 
