@@ -199,9 +199,7 @@ const Graficos = () => {
               )}
             </div>
 
-            <div>
-              
-            </div>
+
           </div>
         )}
 
