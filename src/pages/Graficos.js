@@ -200,10 +200,7 @@ const Graficos = () => {
             </div>
 
             <div>
-              <label>Art. 71</label><br />
-              <select disabled style={{ width: "200px", padding: "5px" }}>
-                <option>Próximamente...</option>
-              </select>
+              
             </div>
           </div>
         )}
