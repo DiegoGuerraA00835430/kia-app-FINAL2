@@ -23,7 +23,7 @@ app.use('/api', usuarioRoutes);
 app.use('/api', authRoutes);
 app.use('/api', elementoRoutes);
 app.use('/api', manifestoRoutes);
-
+app.use('/api/usuarios', usuarioRoutes);
 
 // Conexión y servidor
 sequelize.sync()
