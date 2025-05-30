@@ -1,70 +1,99 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# 🧾 Proyecto KIA - Manifiesto de Residuos
 
-## Available Scripts
+Este proyecto genera un manifiesto oficial de residuos en formato Excel usando una plantilla con diseño oficial. Combina un frontend en React con un backend en FastAPI que llena automáticamente los datos de residuos.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 📁 Estructura del proyecto
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 
+KIA-APP-FINAL2/
+├── KIAAPI/                     # Backend en Node.js
+├── fastapi-manifiesto/        # Backend en FastAPI para generar el Excel
+│   ├── main.py
+│   ├── requirements.txt
+│   ├── Manifiesto KMX-25-40 SAI.xlsx  # Plantilla Excel con formato visual
+│   └── .venv/                 # (Se genera automáticamente)
+├── src/                       # Frontend React 
+├── public/
+├── package.json
+└── README.md
+### 
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## ✅ Instrucciones para correr el proyecto
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 🔧 Paso 1: Configurar el backend en FastAPI
 
-### `npm run build`
+1. Abre terminal en la carpeta `fastapi-manifiesto`
+   ### bash
+   cd fastapi-manifiesto
+   ### 
+2. Crea un entorno virtual:
+   ### bash
+   python -m venv .venv
+   ### 
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+3. Activa el entorno virtual:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   - En Windows:
+     ### bash
+     .\.venv\Scripts\activate
+     ### 
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+   - En Mac/Linux:
+     ### bash
+     source .venv/bin/activate
+     ### 
 
-### `npm run eject`
+4. Instala las dependencias:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+   ### bash
+   pip install -r requirements.txt
+   ### 
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+5. Corre el servidor:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+   ### bash
+   uvicorn main:app --reload
+   ### 
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+   Esto lo habilita en: `http://localhost:8000`
 
-## Learn More
+------------------------------------------------------------------------------------------------------
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### 🔧 Paso 2: Configurar el backend en FastAPI
 
-### Code Splitting
+1. Abre terminal en la carpeta `KIAAPI`
+   ### bash
+   cd KIAAPI
+   ### 
+2. Conecta a la base de datos
+   ### bash
+   node app.js
+   ###
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+------------------------------------------------------------------------------------------------------
+### 💻 Paso 3: Iniciar el frontend React
 
-### Analyzing the Bundle Size
+1. Desde la raíz del proyecto:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+   ### bash
+   npm install
+   npm start
+   ### 
 
-### Making a Progressive Web App
+2. Abre `http://localhost:3000` 
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-### Advanced Configuration
+## 🔁 Próximos pasos sugeridos
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- Convertir los datos fijos en `main.py` en un endpoint POST para enviar datos desde React.
+- Añadir control de fechas o filtros.
+- Agregar autenticación si se requiere proteger el manifiesto.
 
-### Deployment
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
