@@ -1,15 +1,14 @@
 import React, { useState } from "react";
+import "../App.css";
 
 export default function Manifiesto() {
   const [previewUrl, setPreviewUrl] = useState(null);
 
   const generarYMostrarPreview = async () => {
     try {
-      // Paso 1: generar Excel
       const excelResp = await fetch("http://localhost:8000/generar-manifiesto");
       if (!excelResp.ok) throw new Error("No se pudo generar el Excel.");
 
-      // Paso 2: generar vista previa PDF
       const pdfResp = await fetch("http://localhost:8000/preview-manifiesto");
       if (!pdfResp.ok) throw new Error("No se pudo generar el PDF.");
 
@@ -31,10 +30,10 @@ export default function Manifiesto() {
   };
 
   return (
-    <main className="content" style={{ padding: "2rem" }}>
-      <h1 style={{ marginBottom: "2rem" }}>Manifiesto de Residuos</h1>
+    <main className="content manifiesto-container">
+      <h1 className="manifiesto-title">Manifiesto de Residuos</h1>
 
-      <button onClick={generarYMostrarPreview} style={{ marginBottom: "2rem" }}>
+      <button className="manifiesto-btn" onClick={generarYMostrarPreview}>
         Preview
       </button>
 
@@ -44,16 +43,14 @@ export default function Manifiesto() {
           <object
             data={previewUrl}
             type="application/pdf"
-            width="100%"
-            height="600px"
-            style={{ border: "1px solid #ccc" }}
+            className="manifiesto-preview"
           >
-            <p>Tu navegador no puede mostrar PDFs. <a href={previewUrl}>Descargar PDF</a></p>
+            <p>
+              Tu navegador no puede mostrar PDFs.{" "}
+              <a href={previewUrl}>Descargar PDF</a>
+            </p>
           </object>
-          <br />
-          <button onClick={descargarExcel} style={{ marginTop: "1rem" }}>
-            Descargar Excel
-          </button>
+          <button onClick={descargarExcel}>Descargar Excel</button>
         </>
       )}
     </main>

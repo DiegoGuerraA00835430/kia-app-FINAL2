@@ -6,6 +6,7 @@ import "../App.css";
 const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [userName, setUserName] = useState("");
+  const [userRole, setUserRole] = useState("");
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
@@ -28,11 +29,12 @@ const Navbar = () => {
             Authorization: `Bearer ${token}`
           }
         });
-        console.log(res.data); // 👈 Aquí ves si viene bien el usuario
         setUserName(res.data.usuario?.nombre || "Usuario");
+        setUserRole(res.data.usuario?.cargo || "Rol no disponible");
       } catch (err) {
         console.error("No se pudo obtener el nombre del usuario:", err);
         setUserName("Usuario");
+        setUserRole("Rol no disponible");
       }
     };
     fetchNombre();
@@ -49,7 +51,7 @@ const Navbar = () => {
   };
 
   const getInitials = (name) => {
-    if (!name) return "U"; // Valor por defecto si es undefined o vacío
+    if (!name) return "U";
     return name
       .split(" ")
       .map((n) => n[0])
@@ -67,85 +69,38 @@ const Navbar = () => {
         <Link to="/ranking" className="nav-link">Ranking</Link>
         <Link to="/manifiesto" className="nav-link">Manifiesto</Link>
 
-        {/* Botón de usuario con dropdown */}
         <div
           ref={dropdownRef}
           style={{ position: "relative", display: "flex", alignItems: "center" }}
         >
           <button
             onClick={() => setShowDropdown(!showDropdown)}
-            className="nav-link"
-            style={{
-              height: "40px",
-              width: "40px",
-              padding: "8px",
-              fontSize: "16px",
-              lineHeight: "1",
-              textAlign: "center",
-              backgroundColor: "white",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-              cursor: "pointer"
-            }}
+            className="nav-user-button"
           >
             👤
           </button>
 
           {showDropdown && (
-            <div
-              style={{
-                position: "absolute",
-                top: "50px",
-                right: "0",
-                background: "#fff",
-                boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
-                borderRadius: "12px",
-                width: "280px",
-                zIndex: 1000,
-                padding: "20px"
-              }}
-            >
-              {/* Avatar y nombre */}
-              <div style={{ textAlign: "center", marginBottom: "12px" }}>
-                <div
-                  style={{
-                    width: "70px",
-                    height: "70px",
-                    margin: "0 auto 10px",
-                    borderRadius: "50%",
-                    backgroundColor: "#e0e0e0",
-                    color: "#2b6cb0",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "26px",
-                    fontWeight: "bold",
-                    border: "2px solid #2b6cb0"
-                  }}
-                >
-                  {getInitials(userName)}
-                </div>
-                <h3 style={{ margin: 0, fontSize: "18px" }}>{userName}</h3>
-                <button
-                  onClick={handleLogout}
-                  style={{
-                    marginTop: "10px",
-                    padding: "6px 14px",
-                    borderRadius: "6px",
-                    border: "1px solid #ccc",
-                    background: "#f9f9f9",
-                    cursor: "pointer"
-                  }}
-                >
+            <div className="nav-dropdown">
+              <div className="nav-user-info">
+                <div className="nav-avatar">{getInitials(userName)}</div>
+                <h3 className="nav-user-name">{userName}</h3>
+                <p className="nav-user-role">{userRole}</p>
+                <button className="nav-logout-btn" onClick={handleLogout}>
                   Cerrar sesión
                 </button>
               </div>
 
-              <hr style={{ margin: "16px 0", borderColor: "#ddd" }} />
-
-              <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                <li style={dropdownLinkStyle}><a href="#" onClick={goToSettings}>Perfil</a></li>
-              </ul>
+              {userRole === "Admin" && (
+                <>
+                  <hr className="nav-dropdown-separator" />
+                  <ul className="nav-dropdown-links">
+                    <li>
+                      <a href="#" onClick={goToSettings}>Perfil</a>
+                    </li>
+                  </ul>
+                </>
+              )}
             </div>
           )}
         </div>
@@ -154,12 +109,6 @@ const Navbar = () => {
       <img src="/logo.png" alt="KIA logo" className="logo" />
     </header>
   );
-};
-
-const dropdownLinkStyle = {
-  padding: "8px 0",
-  fontSize: "15px",
-  borderBottom: "1px solid #eee"
 };
 
 export default Navbar;

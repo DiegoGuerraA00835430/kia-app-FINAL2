@@ -12,7 +12,6 @@ const manifestoRoutes = require('./routes/manifestoRoutes');
 const proveedorRoutes = require('./routes/proveedorRoutes');
 
 
-
 app.use(cors({
    origin: 'http://localhost:3000',
   credentials: true
@@ -28,7 +27,6 @@ app.use('/api', manifestoRoutes);
 app.use('/api/usuarios', usuarioRoutes);
 
 app.use('/api/proveedores', proveedorRoutes);
-
 
 // Conexión y servidor
 sequelize.sync()
