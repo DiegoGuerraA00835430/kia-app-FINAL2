@@ -29,8 +29,8 @@ const Navbar = () => {
             Authorization: `Bearer ${token}`
           }
         });
-        setUserName(res.data.usuario?.nombre || "Usuario");
-        setUserRole(res.data.usuario?.cargo || "Rol no disponible");
+        setUserName(res.data.empleado?.nombre || "Usuario");
+        setUserRole(res.data.empleado?.cargo || "Rol no disponible");
       } catch (err) {
         console.error("No se pudo obtener el nombre del usuario:", err);
         setUserName("Usuario");
