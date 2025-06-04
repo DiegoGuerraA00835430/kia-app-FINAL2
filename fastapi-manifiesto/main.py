@@ -24,7 +24,7 @@ app.add_middleware(
 # Nombre fijo de archivo para que ambos endpoints trabajen sobre el mismo
 EXCEL_FILENAME = "Manifiesto KMX-AA-X1 SAI.xlsx"
 PDF_FILENAME = "Manifiesto_Preview.pdf"
-PLANTILLA = "Manifiesto KMX-AA-XX SAI.xlsx"  # Tu plantilla base original
+PLANTILLA = "Manifiesto_Preview.xlsx"  # Tu plantilla base original
 
 
 # Ruta: Generar manifiesto Excel
@@ -49,11 +49,11 @@ def generar_manifiesto():
 
         # Agregar los datos
         datos = [
-            ["Aceite usado", "200", "Tambor", "0.5", "kg"],
-            ["Disolvente", "150", "Cont. plástico", "0.8", "kg"],
-            ["Pintura vencida", "100", "Lata", "0.3", "kg"],
-            ["Fango industrial", "250", "Tambor", "1.2", "kg"],
-            ["Líquido refrigerante", "180", "Bidón", "0.6", "kg"]
+            ["Aceite usado", "200", "Tambor", "0.5", "100"],
+            ["Disolvente", "150", "Cont. plástico", "0.8", "1000"],
+            ["Pintura vencida", "100", "Lata", "0.3", "2000"],
+            ["Fango industrial", "250", "Tambor", "1.2", "400"],
+            ["Líquido refrigerante", "180", "Bidón", "0.6", "213"]
         ]
 
         fila_inicio = 20

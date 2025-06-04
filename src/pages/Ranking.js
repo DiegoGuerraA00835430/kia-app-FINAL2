@@ -1,7 +1,7 @@
 // pages/Ranking.js
 import React, { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import "../App.css";
+
 
 export default function Ranking() {
   const [expandedIndex, setExpandedIndex] = useState(null);
