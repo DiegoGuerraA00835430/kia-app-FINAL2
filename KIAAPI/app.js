@@ -8,7 +8,8 @@ const usuarioRoutes = require('./routes/usuarioRoutes');
 const authRoutes = require('./routes/authRoutes');
 const elementoRoutes = require('./routes/elementoRoutes');
 const manifestoRoutes = require('./routes/manifestoRoutes');
-//const proveedorRoutes = require('./routes/proveedorRoutes');
+
+const proveedorRoutes = require('./routes/proveedorRoutes');
 
 
 app.use(cors({
@@ -24,7 +25,8 @@ app.use('/api', authRoutes);
 app.use('/api', elementoRoutes);
 app.use('/api', manifestoRoutes);
 app.use('/api/usuarios', usuarioRoutes);
-//app.use('/api/proveedores', proveedorRoutes);
+
+app.use('/api/proveedores', proveedorRoutes);
 
 // Conexión y servidor
 sequelize.sync()
