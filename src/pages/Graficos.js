@@ -23,7 +23,7 @@ const AREAS = [
   "Stamping", "Utility", "Vendors", "Welding"
 ];
 
-const Graficos = () => {
+export default function Graficos() {
   const [datos, setDatos] = useState([]);
   const [fechaInicio, setFechaInicio] = useState("");
   const [fechaFin, setFechaFin] = useState("");
@@ -96,8 +96,6 @@ const Graficos = () => {
 
   return (
     <div className="page-container">
-      
-
       <main className="content">
         <h1>Gráfico: Proporción de residuos por Área</h1>
 
@@ -106,27 +104,19 @@ const Graficos = () => {
         </button>
 
         {mostrarFiltros && (
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, auto)",
-            gap: "10px",
-            justifyContent: "center",
-            marginBottom: "20px"
-          }}>
-            <div style={{ display: "flex", flexDirection: "column" }}>
+          <div className="filtros-container">
+            <div className="fecha-container">
               <label>Fecha inicio</label>
               <input
                 type="date"
                 value={fechaInicio}
                 onChange={(e) => setFechaInicio(e.target.value)}
-                style={{ width: "150px", padding: "5px" }}
               />
               <label>Fecha final</label>
               <input
                 type="date"
                 value={fechaFin}
                 onChange={(e) => setFechaFin(e.target.value)}
-                style={{ width: "150px", padding: "5px" }}
               />
             </div>
 
@@ -134,44 +124,14 @@ const Graficos = () => {
               <label>Área</label><br />
               <button
                 onClick={() => setMostrarDropdown(!mostrarDropdown)}
-                style={{
-                  width: "200px",
-                  padding: "5px",
-                  textAlign: "left",
-                  border: "1px solid #ccc",
-                  borderRadius: "4px",
-                  backgroundColor: "#fff",
-                  cursor: "pointer"
-                }}
+                className="area-dropdown-toggle"
               >
                 Áreas ▾
               </button>
               {mostrarDropdown && (
-                <div style={{
-                  position: "absolute",
-                  background: "#fff",
-                  border: "1px solid #ccc",
-                  padding: "10px 12px",
-                  borderRadius: "6px",
-                  zIndex: 10,
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-                  maxHeight: "250px",
-                  overflowY: "auto",
-                  minWidth: "200px",
-                  textAlign: "left",
-                }}>
+                <div className="area-dropdown">
                   {[{ name: "Seleccionar todo", isAll: true }, ...AREAS.map((name) => ({ name }))].map((item) => (
-                    <label
-                      key={item.name}
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: "20px 1fr",
-                        alignItems: "center",
-                        marginBottom: "8px",
-                        gap: "8px",
-                        cursor: "pointer",
-                      }}
-                    >
+                    <label key={item.name}>
                       <input
                         type="checkbox"
                         checked={
@@ -189,12 +149,10 @@ const Graficos = () => {
                 </div>
               )}
             </div>
-
-
           </div>
         )}
 
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "20px", flexWrap: "wrap" }}>
+        <div className="chart-section">
           <ResponsiveContainer width={400} height={400}>
             <PieChart>
               <Pie
@@ -214,17 +172,17 @@ const Graficos = () => {
             </PieChart>
           </ResponsiveContainer>
 
-          <div style={{ fontSize: "14px" }}>
-            <ul style={{ listStyle: "none", paddingLeft: 0, margin: 0 }}>
+          <div className="pie-legend">
+            <ul>
               {datosPieChart.map((entry, index) => {
                 const total = datosPieChart.reduce((sum, d) => sum + d.value, 0);
                 const porcentaje = ((entry.value / total) * 100).toFixed(1);
                 return (
-                  <li key={index} style={{ marginBottom: "6px", display: "flex", alignItems: "center", gap: "6px" }}>
-                    <span style={{
-                      width: 12, height: 12, display: "inline-block",
-                      borderRadius: "50%", backgroundColor: COLORS[index % COLORS.length]
-                    }}></span>
+                  <li key={index}>
+                    <span
+                      className="color-dot"
+                      style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                    ></span>
                     <span>{`${entry.name}: ${entry.value.toFixed(2)} ton (${porcentaje}%)`}</span>
                   </li>
                 );
@@ -256,6 +214,4 @@ const Graficos = () => {
       </main>
     </div>
   );
-};
-
-export default Graficos;
+}

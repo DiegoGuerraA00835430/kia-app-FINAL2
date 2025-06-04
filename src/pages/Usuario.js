@@ -62,18 +62,7 @@ export default function Usuario() {
       <main className="content">
         <h2>Crear Usuario</h2>
 
-        {/* Formulario de creación */}
-        <form onSubmit={handleCrear} style={{
-          maxWidth: "800px",
-          margin: "20px auto",
-          padding: "20px",
-          background: "#ffffff",
-          borderRadius: "10px",
-          boxShadow: "0 0 10px #ccc",
-          display: "flex",
-          flexDirection: "column",
-          gap: "10px"
-        }}>
+        <form onSubmit={handleCrear} className="usuario-formulario">
           <input
             type="text"
             placeholder="Nombre"
@@ -85,13 +74,6 @@ export default function Usuario() {
             value={form.cargo}
             onChange={(e) => setForm({ ...form, cargo: e.target.value })}
             required
-            style={{
-              padding: "10px",
-              fontSize: "16px",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-              width: "100%"
-            }}
           >
             <option value="" disabled>Seleccionar cargo</option>
             <option value="Admin">Admin</option>
@@ -120,18 +102,10 @@ export default function Usuario() {
           />
           <button type="submit">Crear Usuario</button>
         </form>
-        
-        {/* Tabla de empleados */}
+
         <h2>Lista de Usuario</h2>
-        <div style={{
-          maxWidth: "800px",
-          margin: "0 auto",
-          background: "white",
-          padding: "20px",
-          borderRadius: "10px",
-          overflowX: "auto"
-        }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
+        <div className="usuario-tabla-container">
+          <table className="usuario-tabla">
             <thead>
               <tr>
                 <th>ID</th>
