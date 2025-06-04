@@ -543,11 +543,13 @@ button {
 }
 
 .usuario-formulario select {
+  max-width: 750px;
   padding: 10px;
+  background: #ffffff;
   font-size: 16px;
-  border: 1px solid #ccc;
   border-radius: 4px;
   width: 100%;
+  gap: 10px;
 }
 
 .usuario-tabla-container {
