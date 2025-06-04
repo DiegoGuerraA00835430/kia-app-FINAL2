@@ -1,4 +1,4 @@
-const Empleado = require('../models/Usuario');
+const {Empleado} = require('../models');
 
 
 
