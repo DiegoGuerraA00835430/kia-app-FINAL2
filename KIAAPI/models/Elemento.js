@@ -32,4 +32,13 @@ const Elemento = sequelize.define('Elemento', {
   timestamps: false
 });
 
+Elemento.associate = (models) => {
+  Elemento.belongsToMany(models.Residuo, {
+    through: 'residuo_elemento',
+    as: 'residuos',
+    foreignKey: 'id_elemento',
+    otherKey: 'id_residuo'
+  });
+};
+
 module.exports = Elemento;

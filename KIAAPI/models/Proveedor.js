@@ -15,17 +15,13 @@ const Proveedor = sequelize.define('proveedor', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    autorizacion_kia: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
     autorizacion_semarnat: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     fecha_final_contrato: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: true
     },
     autorizacion_sct: {
       type: DataTypes.STRING,
@@ -33,7 +29,7 @@ const Proveedor = sequelize.define('proveedor', {
     },
     responsable_tecnico: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     },
 }, {
   schema: 'kia-db',

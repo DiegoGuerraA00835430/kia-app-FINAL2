@@ -1,10 +1,11 @@
 
 const Manifesto = require('../models/Manifesto');
-const residuo = require('../models/Residuo');
+const Residuo = require('../models/Residuo');
 const Usuario = require('../models/Usuario');
 const Proveedor = require('../models/Proveedor');
 const Manejo = require('../models/Manejo');
 const Proceso = require('../models/Proceso');
+const Container = require('../models/Container');
 
 exports.crearManifiesto = async (req, res) => {
     try {
@@ -15,6 +16,7 @@ exports.crearManifiesto = async (req, res) => {
             id_proveedor_transporte,
             id_manejo,
             id_proceso,
+            id_container_type,
             fecha_emision
         } = req.body;
         console.log(req.body);
@@ -49,6 +51,11 @@ exports.crearManifiesto = async (req, res) => {
             return res.status(400).json({ error: 'Proceso invalido' });
         }
 
+        const container = await Container.findByPk(id_container_type);
+        if (!container) {
+            return res.status(400).json({ error: 'Container invalido' });
+        }
+
         const nuevoManifiesto = await Manifiesto.create({
             id_residuo,
             id_empleado,
@@ -56,10 +63,10 @@ exports.crearManifiesto = async (req, res) => {
             id_proveedor_transporte,
             id_manejo,
             id_proceso,
+            id_container_type,
             fecha_emision
         });
-
-        res.status(201).json(nuevoManifiesto);
+        console.log('Manifiesto creado:', nuevoManifiesto);
     } catch (error) {
         console.error('Error al crear el manifiesto:', error);
         res.status(500).json({ error: 'Error al crear el manifiesto' });
@@ -70,22 +77,29 @@ exports.crearManifiesto = async (req, res) => {
         {
           model: Residuo,
           as: 'residuo',
-          attributes: ['nombre_residuo', 'fecha_ingreso', 'cantidad']
+          attributes: ['nombre_residuo', 'fecha_ingreso', 'cantidad'],
+          include: [
+          {
+            model: Elemento,
+            as: 'elementos',
+            attributes: ['elemento']
+          }
+      ]
         },
         {
           model: Usuario,
           as: 'empleado',
-          attributes: ['nombre', 'numero_empleado']
+          attributes: ['nombre']
         },
         {
           model: Proveedor,
-          as: 'proveedorDestino',
-          attributes: ['nombre', 'tipo_proveedor']
+          as: 'destinos',
+          attributes: ['nombre','autorizacion_semarnat',]
         },
         {
           model: Proveedor,
-          as: 'proveedorTransporte',
-          attributes: ['nombre', 'tipo_proveedor']
+          as: 'transportes',
+          attributes: ['nombre','autorizacion_semarnat','autorizacion_sct']
         },
         {
           model: Manejo,
@@ -96,16 +110,36 @@ exports.crearManifiesto = async (req, res) => {
           model: Proceso,
           as: 'proceso',
           attributes: ['nombre_proceso']
+        },
+        {
+          model: Container,
+          as: 'container',
+          attributes: ['nombre']
         }
       ]
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       mensaje: 'Manifiesto creado correctamente',
       manifiesto: manifiestoCompleto
     });
     
-
-
 }
 
+// Actualizar el residuo asociado al manifiesto
+    exports.cambiarResiduoManifiesto = async (req, res) => {
+      const { id_manifiesto } = req.params;
+      const { id_residuo_nuevo } = req.body;
+
+      try {
+        const manifiesto = await Manifesto.findByPk(id_manifiesto);
+        if (!manifiesto) {
+          return res.status(404).json({ error: 'Manifiesto no encontrado' });
+        }
+
+        await manifiesto.update({ id_residuo: id_residuo_nuevo });
+        res.status(200).json({ message: 'Residuo del manifiesto actualizado', manifiesto });
+      } catch (error) {
+        res.status(500).json({ error: 'Error al actualizar el manifiesto', details: error.message });
+      }
+};
