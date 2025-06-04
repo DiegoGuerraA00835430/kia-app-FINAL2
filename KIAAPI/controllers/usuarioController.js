@@ -1,4 +1,3 @@
-const Usuario = require('../models/Usuario');
 const Empleado = require('../models/Usuario');
 
 

@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const Usuario = require('../models/Usuario');
+const { Empleado } = require('../models');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'secreto123';
 
@@ -9,7 +9,7 @@ exports.login = async (req, res) =>
     const { numero_empleado, contrasena } = req.body;
     console.log('Login intento:', { numero_empleado, contrasena });
 
-    const usuario = await Usuario.findOne({ where: { numero_empleado } });
+    const usuario = await Empleado.findOne({ where: { numero_empleado } });
 
     if (!usuario) return res.status(401).send('Usuario no encontrado' );
 
