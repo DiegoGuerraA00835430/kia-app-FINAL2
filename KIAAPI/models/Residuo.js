@@ -7,7 +7,7 @@ const Residuo = sequelize.define('residuo', {
         primaryKey: true,
         autoIncrement: true,
     },
-    id_elemento: {
+    id_material_type: {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
@@ -38,5 +38,12 @@ Residuo.associate = (models) => {
         as: 'materialType',
     });
 }
+
+Residuo.belongsToMany(Elemento, {
+  through: 'residuo_elemento',
+  as: 'elementos',
+  foreignKey: 'id_residuo',
+  otherKey: 'id_elemento'
+});
 
 module.exports = Residuo;

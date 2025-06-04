@@ -34,7 +34,7 @@ export default function Usuario() {
     }
 
     try {
-      await axios.post('http://localhost:4002/api/usuarios', {
+      await axios.post('http://localhost:4002/api/registro', {
         nombre: form.nombre,
         cargo: form.cargo,
         numero_empleado: form.numero_empleado,

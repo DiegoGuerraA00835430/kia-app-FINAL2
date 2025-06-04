@@ -48,6 +48,11 @@ Manifiesto.associate = (models) => {
         foreignKey: 'id_proceso',
         as: 'proceso'
     });
+
+    Manifiesto.belongsTo(models.Container, {
+        foreignKey: 'id_container_type',
+        as: 'container'
+    });
 }
 
 module.exports = Manifiesto;
