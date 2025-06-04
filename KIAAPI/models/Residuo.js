@@ -28,22 +28,19 @@ const Residuo = sequelize.define('residuo', {
 });
 
 Residuo.associate = (models) => {
-    Residuo.belongsTo(models.Elemento, {
-        foreignKey: 'id_elemento',
-        as: 'elemento',
-    });
-
     Residuo.belongsTo(models.Material_type, {
         foreignKey: 'id_material_type',
         as: 'materialType',
     });
+    
+    Residuo.belongsToMany(Elemento, {
+        through: 'residuo_elemento',
+        as: 'elementos',
+        foreignKey: 'id_residuo',
+        otherKey: 'id_elemento'
+    });
 }
 
-Residuo.belongsToMany(Elemento, {
-  through: 'residuo_elemento',
-  as: 'elementos',
-  foreignKey: 'id_residuo',
-  otherKey: 'id_elemento'
-});
+
 
 module.exports = Residuo;

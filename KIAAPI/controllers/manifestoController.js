@@ -66,8 +66,7 @@ exports.crearManifiesto = async (req, res) => {
             id_container_type,
             fecha_emision
         });
-
-        res.status(201).json(nuevoManifiesto);
+        console.log('Manifiesto creado:', nuevoManifiesto);
     } catch (error) {
         console.error('Error al crear el manifiesto:', error);
         res.status(500).json({ error: 'Error al crear el manifiesto' });
@@ -94,13 +93,13 @@ exports.crearManifiesto = async (req, res) => {
         },
         {
           model: Proveedor,
-          as: 'proveedorDestino',
-          attributes: ['nombre']
+          as: 'destinos',
+          attributes: ['nombre','autorizacion_semarnat',]
         },
         {
           model: Proveedor,
-          as: 'proveedorTransporte',
-          attributes: ['nombre']
+          as: 'transportes',
+          attributes: ['nombre','autorizacion_semarnat','autorizacion_sct']
         },
         {
           model: Manejo,
@@ -120,12 +119,14 @@ exports.crearManifiesto = async (req, res) => {
       ]
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       mensaje: 'Manifiesto creado correctamente',
       manifiesto: manifiestoCompleto
     });
     
-    // Actualizar el residuo asociado al manifiesto
+}
+
+// Actualizar el residuo asociado al manifiesto
     exports.cambiarResiduoManifiesto = async (req, res) => {
       const { id_manifiesto } = req.params;
       const { id_residuo_nuevo } = req.body;
@@ -142,7 +143,3 @@ exports.crearManifiesto = async (req, res) => {
         res.status(500).json({ error: 'Error al actualizar el manifiesto', details: error.message });
       }
 };
-
-
-}
-
