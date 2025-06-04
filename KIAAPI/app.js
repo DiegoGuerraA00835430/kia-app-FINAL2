@@ -1,13 +1,14 @@
-require("dotenv").config({ path: '../.env' });
+require("dotenv").config(); // Busca en la misma carpeta
 const express = require('express');
 const app = express();
 const cors = require('cors')
-const port = process.env.PORT || 4003;
+const port = process.env.PORT || 4002;
 const sequelize = require('./config/database');
 const usuarioRoutes = require('./routes/usuarioRoutes');
 const authRoutes = require('./routes/authRoutes');
 const elementoRoutes = require('./routes/elementoRoutes');
 const manifestoRoutes = require('./routes/manifestoRoutes');
+
 const proveedorRoutes = require('./routes/proveedorRoutes');
 
 
@@ -24,6 +25,7 @@ app.use('/api', authRoutes);
 app.use('/api', elementoRoutes);
 app.use('/api', manifestoRoutes);
 app.use('/api/usuarios', usuarioRoutes);
+
 app.use('/api/proveedores', proveedorRoutes);
 
 // Conexión y servidor
@@ -35,7 +37,3 @@ sequelize.sync()
     });
   })
   .catch(error => console.error('Error al conectar:', error));
-
-
-
-

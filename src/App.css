@@ -77,6 +77,24 @@ body {
 .logo {
   height: 40px;
 }
+.nav-link {
+  text-decoration: none;
+  color: black;
+  margin-right: 20px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  background-color: white;
+  border: 1px solid #ccc;
+}
+
+.nav-link:hover {
+  background-color: #e0e0e0;
+}
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
 /* Login */
 .login-container {
@@ -213,4 +231,424 @@ button {
 
 .manifiesto-tabla th {
   background-color: #f0f0f0;
+}
+/* ========================== */
+/* Dashboard Page Styles      */
+/* ========================== */
+
+.dashboard-container {
+  width: 70%;
+  height: 50%;
+  padding: 40px;
+  border: 2px solid #1a73e8;
+  border-radius: 12px;
+  background-color: #f5f5f5;
+  font-size: 32px;
+  font-weight: bold;
+  color: #1a73e8;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ========================== */
+/* Graficos Page Styles       */
+/* ========================== */
+
+.filtros-container {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.fecha-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.fecha-container input {
+  width: 150px;
+  padding: 5px;
+}
+
+.area-dropdown-toggle {
+  width: 200px;
+  padding: 5px;
+  text-align: left;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.area-dropdown {
+  position: absolute;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 10px 12px;
+  border-radius: 6px;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  max-height: 250px;
+  overflow-y: auto;
+  min-width: 200px;
+  text-align: left;
+}
+
+.area-dropdown label {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.chart-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.pie-legend {
+  font-size: 14px;
+}
+
+.pie-legend ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.pie-legend li {
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pie-legend .color-dot {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  border-radius: 50%;
+}
+
+/* ========================== */
+/* Manifiesto Page Styles     */
+/* ========================== */
+
+.manifiesto-container {
+  padding: 2rem;
+}
+
+.manifiesto-title {
+  margin-bottom: 2rem;
+}
+
+.manifiesto-btn {
+  margin-bottom: 2rem;
+}
+
+.manifiesto-preview {
+  border: 1px solid #ccc;
+  width: 100%;
+  height: 600px;
+  margin-bottom: 1rem;
+}
+
+
+/* ========================== */
+/* Ranking Page Styles        */
+/* ========================== */
+
+.ranking-box {
+  width: 60%;
+  margin: 0 auto;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.ranking-box h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.filters {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.filters select {
+  padding: 8px 12px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.ranking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ranking-item {
+  background-color: #eeeeee;
+  padding: 15px 20px;
+  border-radius: 8px;
+  font-size: 18px;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.3s;
+}
+
+.ranking-item:hover {
+  background-color: #e0e0e0;
+}
+
+.arrow {
+  position: absolute;
+  right: 20px;
+  font-size: 16px;
+}
+
+.details {
+  background-color: #f9f9f9;
+  padding: 15px 20px;
+  border-radius: 0 0 8px 8px;
+  margin-top: -10px;
+  border-top: 1px solid #ccc;
+}
+
+
+/* ========================== */
+/* Reporte Page Styles        */
+/* ========================== */
+
+.filtros-reporte {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.filtros-reporte .fecha-container,
+.filtros-reporte .area-container,
+.filtros-reporte .orden-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.filtros-reporte input,
+.filtros-reporte select,
+.filtros-reporte button {
+  width: 150px;
+  padding: 5px;
+}
+
+.area-dropdown-toggle {
+  width: 200px;
+  padding: 5px;
+  text-align: left;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.area-dropdown {
+  position: absolute;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 10px 12px;
+  border-radius: 6px;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  max-height: 250px;
+  overflow-y: auto;
+  min-width: 200px;
+  text-align: left;
+}
+
+.area-dropdown label {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.tabla-scroll {
+  overflow-x: auto;
+}
+
+.tabla-reporte {
+  margin: auto;
+  background-color: white;
+  min-width: 1200px;
+}
+
+.paginacion-reporte {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.paginacion-reporte button {
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.paginacion-reporte .activo {
+  background: #1a73e8;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* ========================== */
+/* Usuario Page Styles        */
+/* ========================== */
+
+.usuario-formulario {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #ccc;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.usuario-formulario select {
+  max-width: 750px;
+  padding: 10px;
+  background: #ffffff;
+  font-size: 16px;
+  border-radius: 4px;
+  width: 100%;
+  gap: 10px;
+}
+
+.usuario-tabla-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  overflow-x: auto;
+}
+
+.usuario-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+/* ========================== */
+/* Navbar Styles              */
+/* ========================== */
+
+.nav-user-button {
+  height: 40px;
+  width: 40px;
+  padding: 8px;
+  font-size: 16px;
+  line-height: 1;
+  text-align: center;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.nav-dropdown {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  width: 280px;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.nav-user-info {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.nav-avatar {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 10px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  color: #2b6cb0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: bold;
+  border: 2px solid #2b6cb0;
+}
+
+.nav-user-name {
+  margin: 0;
+  font-size: 18px;
+}
+
+.nav-user-role {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.nav-logout-btn {
+  margin-top: 10px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  cursor: pointer;
+}
+
+.nav-dropdown-separator {
+  margin: 16px 0;
+  border-color: #ddd;
+}
+
+.nav-dropdown-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-dropdown-links li {
+  padding: 8px 0;
+  font-size: 15px;
+  border-bottom: 1px solid #eee;
 }

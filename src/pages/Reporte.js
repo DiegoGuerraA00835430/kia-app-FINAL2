@@ -1,4 +1,3 @@
-// Reporte.js
 import React, { useEffect, useState, useRef } from "react";
 import "../App.css";
 
@@ -77,8 +76,6 @@ const Reporte = () => {
 
   return (
     <div className="page-container">
-      
-
       <main className="content">
         <h1>Reporte</h1>
 
@@ -87,30 +84,23 @@ const Reporte = () => {
         </button>
 
         {mostrarFiltros && (
-          <div style={{
-            display: "grid", gridTemplateColumns: "repeat(3, auto)", gap: "10px",
-            justifyContent: "center", marginBottom: "20px"
-          }}>
-            <div style={{ display: "flex", flexDirection: "column" }}>
+          <div className="filtros-reporte">
+            <div className="fecha-container">
               <label>Fecha inicio</label>
-              <input type="date" value={fechaInicio} onChange={(e) => setFechaInicio(e.target.value)} style={{ width: "150px", padding: "5px" }} />
+              <input type="date" value={fechaInicio} onChange={(e) => setFechaInicio(e.target.value)} />
               <label>Fecha final</label>
-              <input type="date" value={fechaFin} onChange={(e) => setFechaFin(e.target.value)} style={{ width: "150px", padding: "5px" }} />
+              <input type="date" value={fechaFin} onChange={(e) => setFechaFin(e.target.value)} />
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
+            <div className="area-container">
               <label>Área</label>
-              <button onClick={() => setMostrarDropdown(!mostrarDropdown)} style={{ width: "200px", padding: "5px", textAlign: "left", border: "1px solid #ccc", borderRadius: "4px", backgroundColor: "#fff", cursor: "pointer" }}>
+              <button onClick={() => setMostrarDropdown(!mostrarDropdown)} className="area-dropdown-toggle">
                 Áreas ▾
               </button>
               {mostrarDropdown && (
-                <div ref={dropdownRef} style={{
-                  position: "absolute", background: "#fff", border: "1px solid #ccc", padding: "10px 12px",
-                  borderRadius: "6px", zIndex: 10, boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-                  maxHeight: "250px", overflowY: "auto", minWidth: "200px", textAlign: "left"
-                }}>
+                <div ref={dropdownRef} className="area-dropdown">
                   {[{ name: "Seleccionar todo", isAll: true }, ...AREAS.map((name) => ({ name }))].map((item) => (
-                    <label key={item.name} style={{ display: "grid", gridTemplateColumns: "20px 1fr", alignItems: "center", marginBottom: "8px", gap: "8px", cursor: "pointer" }}>
+                    <label key={item.name}>
                       <input
                         type="checkbox"
                         checked={item.isAll ? areasSeleccionadas.length === AREAS.length : areasSeleccionadas.includes(item.name)}
@@ -123,9 +113,9 @@ const Reporte = () => {
               )}
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
+            <div className="orden-container">
               <label>Orden por cantidad</label>
-              <select value={ordenCantidad} onChange={(e) => setOrdenCantidad(e.target.value)} style={{ width: "200px", padding: "5px" }}>
+              <select value={ordenCantidad} onChange={(e) => setOrdenCantidad(e.target.value)}>
                 <option value="">--</option>
                 <option value="asc">Ascendente</option>
                 <option value="desc">Descendente</option>
@@ -134,8 +124,8 @@ const Reporte = () => {
           </div>
         )}
 
-        <div style={{ overflowX: "auto" }}>
-          <table className="manifiesto-tabla" style={{ margin: "auto", backgroundColor: "white", minWidth: "1200px" }}>
+        <div className="tabla-scroll">
+          <table className="manifiesto-tabla tabla-reporte">
             <thead>
               <tr>
                 <th>Nombre del residuo</th>
@@ -175,13 +165,13 @@ const Reporte = () => {
           </table>
         </div>
 
-        <div style={{ marginTop: "20px", display: "flex", justifyContent: "center", alignItems: "center", gap: "4px", flexWrap: "nowrap", whiteSpace: "nowrap" }}>
+        <div className="paginacion-reporte">
           {[1, 2, 3, 4].map((num) =>
             num <= totalPaginas ? (
               <button
                 key={num}
                 onClick={() => setPaginaActual(num)}
-                style={{ width: "24px", height: "24px", fontSize: "12px", borderRadius: "4px", background: paginaActual === num ? "#1a73e8" : "transparent", color: paginaActual === num ? "#fff" : "#1a73e8", border: "none", fontWeight: paginaActual === num ? "bold" : "normal", cursor: "pointer", padding: "0" }}
+                className={paginaActual === num ? "activo" : ""}
               >
                 {num}
               </button>
@@ -189,10 +179,15 @@ const Reporte = () => {
           )}
           {totalPaginas > 5 && <span style={{ fontSize: "12px", color: "#555" }}>...</span>}
           {totalPaginas > 4 && (
-            <button onClick={() => setPaginaActual(totalPaginas)} style={{ width: "24px", height: "24px", fontSize: "12px", borderRadius: "4px", background: paginaActual === totalPaginas ? "#1a73e8" : "transparent", color: paginaActual === totalPaginas ? "#fff" : "#1a73e8", border: "none", fontWeight: paginaActual === totalPaginas ? "bold" : "normal", cursor: "pointer", padding: "0" }}>{totalPaginas}</button>
+            <button
+              onClick={() => setPaginaActual(totalPaginas)}
+              className={paginaActual === totalPaginas ? "activo" : ""}
+            >
+              {totalPaginas}
+            </button>
           )}
           {paginaActual < totalPaginas && (
-            <button onClick={() => setPaginaActual(paginaActual + 1)} style={{ width: "24px", height: "24px", fontSize: "12px", borderRadius: "4px", background: "transparent", color: "#1a73e8", border: "none", cursor: "pointer", padding: "0" }}>&gt;</button>
+            <button onClick={() => setPaginaActual(paginaActual + 1)}>&gt;</button>
           )}
         </div>
       </main>

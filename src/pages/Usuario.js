@@ -60,20 +60,9 @@ export default function Usuario() {
   return (
     <div>
       <main className="content">
-        <h2>Lista de Empleados</h2>
+        <h2>Crear Usuario</h2>
 
-        {/* Formulario de creación */}
-        <form onSubmit={handleCrear} style={{
-          maxWidth: "800px",
-          margin: "20px auto",
-          padding: "20px",
-          background: "#ffffff",
-          borderRadius: "10px",
-          boxShadow: "0 0 10px #ccc",
-          display: "flex",
-          flexDirection: "column",
-          gap: "10px"
-        }}>
+        <form onSubmit={handleCrear} className="usuario-formulario">
           <input
             type="text"
             placeholder="Nombre"
@@ -81,13 +70,15 @@ export default function Usuario() {
             onChange={(e) => setForm({ ...form, nombre: e.target.value })}
             required
           />
-          <input
-            type="text"
-            placeholder="Cargo"
+          <select
             value={form.cargo}
             onChange={(e) => setForm({ ...form, cargo: e.target.value })}
             required
-          />
+          >
+            <option value="" disabled>Seleccionar cargo</option>
+            <option value="Admin">Admin</option>
+            <option value="Auditor">Auditor</option>
+          </select>
           <input
             type="text"
             placeholder="Número de empleado (8 dígitos)"
@@ -112,16 +103,9 @@ export default function Usuario() {
           <button type="submit">Crear Usuario</button>
         </form>
 
-        {/* Tabla de empleados */}
-        <div style={{
-          maxWidth: "800px",
-          margin: "0 auto",
-          background: "white",
-          padding: "20px",
-          borderRadius: "10px",
-          overflowX: "auto"
-        }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
+        <h2>Lista de Usuario</h2>
+        <div className="usuario-tabla-container">
+          <table className="usuario-tabla">
             <thead>
               <tr>
                 <th>ID</th>
