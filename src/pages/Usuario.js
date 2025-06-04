@@ -60,7 +60,7 @@ export default function Usuario() {
   return (
     <div>
       <main className="content">
-        <h2>Lista de Empleados</h2>
+        <h2>Crear Usuario</h2>
 
         {/* Formulario de creación */}
         <form onSubmit={handleCrear} style={{
@@ -81,13 +81,22 @@ export default function Usuario() {
             onChange={(e) => setForm({ ...form, nombre: e.target.value })}
             required
           />
-          <input
-            type="text"
-            placeholder="Cargo"
+          <select
             value={form.cargo}
             onChange={(e) => setForm({ ...form, cargo: e.target.value })}
             required
-          />
+            style={{
+              padding: "10px",
+              fontSize: "16px",
+              border: "1px solid #ccc",
+              borderRadius: "4px",
+              width: "100%"
+            }}
+          >
+            <option value="" disabled>Seleccionar cargo</option>
+            <option value="Admin">Admin</option>
+            <option value="Auditor">Auditor</option>
+          </select>
           <input
             type="text"
             placeholder="Número de empleado (8 dígitos)"
@@ -111,8 +120,9 @@ export default function Usuario() {
           />
           <button type="submit">Crear Usuario</button>
         </form>
-
+        
         {/* Tabla de empleados */}
+        <h2>Lista de Usuario</h2>
         <div style={{
           maxWidth: "800px",
           margin: "0 auto",

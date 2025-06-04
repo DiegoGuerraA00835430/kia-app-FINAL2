@@ -77,6 +77,24 @@ body {
 .logo {
   height: 40px;
 }
+.nav-link {
+  text-decoration: none;
+  color: black;
+  margin-right: 20px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  background-color: white;
+  border: 1px solid #ccc;
+}
+
+.nav-link:hover {
+  background-color: #e0e0e0;
+}
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
 /* Login */
 .login-container {
