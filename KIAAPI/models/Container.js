@@ -1,7 +1,6 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
 
-const Container = sequelize.define('container', {
+module.exports = (sequelize, DataTypes) => {
+const Container = sequelize.define('Container', {
   id_container_type: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -12,10 +11,10 @@ const Container = sequelize.define('container', {
     allowNull: false,
   },
 }, {
-  schema: 'kia-db',
+  schema: 'kiadb',
   freezeTableName: true,
   tableName: 'container_type',
   timestamps: false,
 });
-
-module.exports = Container;
+  return Container;
+};

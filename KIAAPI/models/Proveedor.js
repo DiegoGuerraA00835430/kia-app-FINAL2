@@ -1,7 +1,5 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
-
-const Proveedor = sequelize.define('proveedor', {
+module.exports = (sequelize, DataTypes) => {
+const Proveedor = sequelize.define('Proveedor', {
     id_proveedor: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -32,22 +30,22 @@ const Proveedor = sequelize.define('proveedor', {
       allowNull: true
     },
 }, {
-  schema: 'kia-db',
+  schema: 'kiadb',
   tableName: 'proveedores',
   freezeTableName: true,
   timestamps: false
 });
 
 Proveedor.associate = (models) => {
-    Proveedor.hasMany(models.Manifesto, {
+    Proveedor.hasMany(models.Manifiesto, {
       foreignKey: 'id_proveedor_transporte',
       as: 'transportes'
     });
 
-    Proveedor.hasMany(models.Manifesto, {
+    Proveedor.hasMany(models.Manifiesto, {
       foreignKey: 'id_proveedor_destino',
       as: 'destinos'
     });
   }
-
-module.exports = Proveedor;
+return Proveedor;
+};

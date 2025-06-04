@@ -1,5 +1,5 @@
 
-const Manifesto = require('../models/Manifesto');
+const Manifiesto = require('../models/Manifiesto');
 const Residuo = require('../models/Residuo');
 const Usuario = require('../models/Usuario');
 const Proveedor = require('../models/Proveedor');
@@ -72,7 +72,7 @@ exports.crearManifiesto = async (req, res) => {
         res.status(500).json({ error: 'Error al crear el manifiesto' });
     }
 
-    const manifiestoCompleto = await Manifesto.findByPk(nuevoManifiesto.id, {
+    const manifiestoCompleto = await Manifiesto.findByPk(nuevoManifiesto.id, {
       include: [
         {
           model: Residuo,
@@ -132,7 +132,7 @@ exports.crearManifiesto = async (req, res) => {
       const { id_residuo_nuevo } = req.body;
 
       try {
-        const manifiesto = await Manifesto.findByPk(id_manifiesto);
+        const manifiesto = await Manifiesto.findByPk(id_manifiesto);
         if (!manifiesto) {
           return res.status(404).json({ error: 'Manifiesto no encontrado' });
         }

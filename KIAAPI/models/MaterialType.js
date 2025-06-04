@@ -1,7 +1,6 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
 
-const materialType = sequelize.define('material_type', {
+module.exports = (sequelize, DataTypes) => {
+const MaterialType = sequelize.define('Material_type', {
   id_material_type: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -12,10 +11,10 @@ const materialType = sequelize.define('material_type', {
     allowNull: false,
   },
 }, {
-  schema: 'kia-db',
+  schema: 'kiadb',
   tableName: 'material_type',
   freezeTableName: true,
   timestamps: false,
 });
-
-module.exports = materialType;
+return MaterialType;
+};

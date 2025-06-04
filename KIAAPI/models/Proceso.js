@@ -1,7 +1,6 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
 
-const Proceso = sequelize.define('proceso', {
+module.exports = (sequelize, DataTypes) => {
+const Proceso = sequelize.define('Proceso', {
   id_proceso: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -12,9 +11,10 @@ const Proceso = sequelize.define('proceso', {
     allowNull: false,
   },
 }, {
-  schema: 'kia-db',
+  schema: 'kiadb',
+  tableName: 'proceso',
   freezeTableName: true,
   timestamps: false,
 });
-
-module.exports = Proceso;
+return Proceso;
+};
