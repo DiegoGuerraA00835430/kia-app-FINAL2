@@ -24,6 +24,7 @@ export default function Reporte() {
           "Nombre del residuo": item.residuo?.materialType?.name || "—",
           "Tipo de contenedor": item.container?.name || "—",
           "Cantidad generada Ton.": item.residuo?.cantidad || "—",
+          "Elementos": item.residuo?.elementos?.map(e => e.elemento).join(', ') || "—",
           "Área o proceso de generación": item.proceso?.nombre || "—",
           "Fecha de ingreso": item.residuo?.fecha_generacion?.slice(0, 10) || "—",
           "Fecha de salida": item.fecha_emision?.slice(0, 10) || "—",
@@ -34,7 +35,7 @@ export default function Reporte() {
           "Destino": item.proveedorDestino?.nombre || "—",
           "Autorización destino": item.proveedorDestino?.autorizacion_semarnat || "—",
           "Responsable Técnico": item.empleado?.nombre || "—",
-          "Elementos": item.residuo?.elementos?.map(e => e.elemento).join(', ') || "—"
+          
         }));
         setDatos(formateado);
       });
