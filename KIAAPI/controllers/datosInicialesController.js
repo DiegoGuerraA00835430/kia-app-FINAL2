@@ -21,7 +21,6 @@ exports.obtenerDatosIniciales = async (req, res) => {
 
     res.json({
       residuos,
-      empleados,
       contenedores,
       procesos,
       manejos,

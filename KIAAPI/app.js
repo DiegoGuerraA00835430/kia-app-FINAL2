@@ -8,7 +8,7 @@ const usuarioRoutes = require('./routes/usuarioRoutes');
 const authRoutes = require('./routes/authRoutes');
 const elementoRoutes = require('./routes/elementoRoutes');
 const manifestoRoutes = require('./routes/manifestoRoutes');
-
+const datosInicialesRoutes = require('./routes/datosInicialesUnityRoutes');
 const proveedorRoutes = require('./routes/proveedorRoutes');
 
 
@@ -25,8 +25,8 @@ app.use('/api', authRoutes);
 app.use('/api', elementoRoutes);
 app.use('/api', manifestoRoutes);
 app.use('/api/usuarios', usuarioRoutes);
-
 app.use('/api/proveedores', proveedorRoutes);
+app.use('/api/datos-iniciales', datosInicialesRoutes);
 
 // Conexión y servidor
 sequelize.sync()

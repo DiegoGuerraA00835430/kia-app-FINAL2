@@ -1,145 +1,190 @@
+const db = require('../models');
 
-const Manifiesto = require('../models/Manifiesto');
-const Residuo = require('../models/Residuo');
-const Usuario = require('../models/Usuario');
-const Proveedor = require('../models/Proveedor');
-const Manejo = require('../models/Manejo');
-const Proceso = require('../models/Proceso');
-const Container = require('../models/Container');
+const { Manifiesto, Residuo, Empleado, Proveedor, Manejo, Proceso, Container, Elemento, Material_type } = db;
 
+// 📝 Crear manifiesto
 exports.crearManifiesto = async (req, res) => {
-    try {
-        const{
-            id_residuo,
-            id_empleado,
-            id_proveedor_destino,
-            id_proveedor_transporte,
-            id_manejo,
-            id_proceso,
-            id_container_type,
-            fecha_emision
-        } = req.body;
-        console.log(req.body);
+  const {
+    id_residuo,
+    id_empleado,
+    id_proveedor_destino,
+    id_proveedor_transporte,
+    id_manejo,
+    id_proceso,
+    id_container_type,
+    fecha_emision
+  } = req.body;
 
-        const residuo = await Residuo.findByPk(id_residuo);
-        if (!residuo) {
-            return res.status(400).json({ error: 'Residuo invalido' });
-        }
+  try {
+    const [
+      residuo,
+      empleado,
+      proveedorDestino,
+      proveedorTransporte,
+      manejo,
+      proceso,
+      contenedor
+    ] = await Promise.all([
+      db.Residuo.findByPk(id_residuo),
+      db.Empleado.findByPk(id_empleado),
+      db.Proveedor.findByPk(id_proveedor_destino),
+      db.Proveedor.findByPk(id_proveedor_transporte),
+      db.Manejo.findByPk(id_manejo),
+      db.Proceso.findByPk(id_proceso),
+      db.Container.findByPk(id_container_type)
+    ]);
 
-        const empleado = await Empleado.findByPk(id_empleado);
-        if (!empleado) {
-            return res.status(400).json({ error: 'Empleado invalido' });
-        }
-
-        const proveedorDestino = await Proveedor.findByPk(id_proveedor_destino);
-        if (!proveedorDestino) {
-            return res.status(400).json({ error: 'Proveedor de destino invalido' });
-        }
-
-        const proveedorTransporte = await Proveedor.findByPk(id_proveedor_transporte);
-        if (!proveedorTransporte) {
-            return res.status(400).json({ error: 'Proveedor de transporte invalido' });
-        }
-
-        const manejo = await Manejo.findByPk(id_manejo);
-        if (!manejo) {
-            return res.status(400).json({ error: 'Manejo invalido' });
-        }
-
-        const proceso = await Proceso.findByPk(id_proceso);
-        if (!proceso) {
-            return res.status(400).json({ error: 'Proceso invalido' });
-        }
-
-        const container = await Container.findByPk(id_container_type);
-        if (!container) {
-            return res.status(400).json({ error: 'Container invalido' });
-        }
-
-        const nuevoManifiesto = await Manifiesto.create({
-            id_residuo,
-            id_empleado,
-            id_proveedor_destino,
-            id_proveedor_transporte,
-            id_manejo,
-            id_proceso,
-            id_container_type,
-            fecha_emision
-        });
-        console.log('Manifiesto creado:', nuevoManifiesto);
-    } catch (error) {
-        console.error('Error al crear el manifiesto:', error);
-        res.status(500).json({ error: 'Error al crear el manifiesto' });
+    if (!residuo || !empleado || !proveedorDestino || !proveedorTransporte || !manejo || !proceso || !contenedor) {
+      return res.status(400).json({ error: 'Uno o más datos son inválidos' });
     }
 
-    const manifiestoCompleto = await Manifiesto.findByPk(nuevoManifiesto.id, {
+    const nuevoManifiesto = await db.Manifiesto.create({
+      id_residuo,
+      id_empleado,
+      id_proveedor_destino,
+      id_proveedor_transporte,
+      id_manejo,
+      id_proceso,
+      id_container_type,
+      fecha_emision: fecha_emision || null
+    });
+
+    const manifiestoCompleto = await db.Manifiesto.findByPk(nuevoManifiesto.id_manifiesto, {
+      include: [
+        {
+          model: db.Residuo,
+          as: 'residuo',
+          attributes: ['nombre_residuo', 'fecha_generacion', 'cantidad'],
+          include: [
+            {
+              model: db.Elemento,
+              as: 'elementos',
+              attributes: ['elemento']
+            }
+          ]
+        },
+        {
+          model: db.Empleado,
+          as: 'empleado',
+          attributes: ['nombre']
+        },
+        {
+          model: db.Proveedor,
+          as: 'proveedorDestino',
+          attributes: ['nombre', 'autorizacion_semarnat']
+        },
+        {
+          model: db.Proveedor,
+          as: 'proveedorTransporte',
+          attributes: ['nombre', 'autorizacion_semarnat', 'autorizacion_sct']
+        },
+        {
+          model: db.Manejo,
+          as: 'manejo',
+          attributes: ['manejo']
+        },
+        {
+          model: db.Proceso,
+          as: 'proceso',
+          attributes: ['nombre']
+        },
+        {
+          model: db.Container,
+          as: 'container',
+          attributes: ['name']
+        }
+      ]
+    });
+
+    res.status(201).json({
+      mensaje: 'Manifiesto creado correctamente',
+      manifiesto: manifiestoCompleto
+    });
+
+  } catch (error) {
+    console.error('❌ Error al crear manifiesto:', error);
+    res.status(500).json({ error: 'Error al crear el manifiesto' });
+  }
+};
+
+// 🔁 Cambiar residuo del manifiesto
+exports.cambiarResiduoManifiesto = async (req, res) => {
+  const { id_manifiesto } = req.params;
+  const { id_residuo_nuevo } = req.body;
+
+  try {
+    const manifiesto = await db.Manifiesto.findByPk(id_manifiesto);
+    if (!manifiesto) {
+      return res.status(404).json({ error: 'Manifiesto no encontrado' });
+    }
+
+    await manifiesto.update({ id_residuo: id_residuo_nuevo });
+    res.status(200).json({ message: 'Residuo del manifiesto actualizado', manifiesto });
+
+  } catch (error) {
+    console.error('❌ Error al actualizar residuo:', error);
+    res.status(500).json({ error: 'Error al actualizar el manifiesto', details: error.message });
+  }
+};
+
+exports.obtenerManifiestos = async (req, res) => {
+  try {
+    const manifiestos = await Manifiesto.findAll({
       include: [
         {
           model: Residuo,
           as: 'residuo',
-          attributes: ['nombre_residuo', 'fecha_ingreso', 'cantidad'],
+          attributes: ['cantidad', 'fecha_generacion'],
           include: [
-          {
-            model: Elemento,
-            as: 'elementos',
-            attributes: ['elemento']
-          }
-      ]
+            {
+              model: Material_type,
+              as: 'materialType',
+              attributes: ['name']
+            },
+            {
+              model: Elemento,
+              as: 'elementos',
+              attributes: ['elemento'],
+              through: { attributes: [] } // Oculta residuo_elemento
+            }
+          ]
         },
         {
-          model: Usuario,
+          model: Empleado,
           as: 'empleado',
           attributes: ['nombre']
         },
         {
           model: Proveedor,
-          as: 'destinos',
-          attributes: ['nombre','autorizacion_semarnat',]
+          as: 'proveedorDestino',
+          attributes: ['nombre', 'autorizacion_semarnat']
         },
         {
           model: Proveedor,
-          as: 'transportes',
-          attributes: ['nombre','autorizacion_semarnat','autorizacion_sct']
+          as: 'proveedorTransporte',
+          attributes: ['nombre', 'autorizacion_semarnat', 'autorizacion_sct']
         },
         {
           model: Manejo,
           as: 'manejo',
-          attributes: ['tipo_manejo']
+          attributes: ['manejo']
         },
         {
           model: Proceso,
           as: 'proceso',
-          attributes: ['nombre_proceso']
+          attributes: ['nombre']
         },
         {
           model: Container,
           as: 'container',
-          attributes: ['nombre']
+          attributes: ['name']
         }
       ]
     });
 
-    return res.status(201).json({
-      mensaje: 'Manifiesto creado correctamente',
-      manifiesto: manifiestoCompleto
-    });
-    
-}
-
-// Actualizar el residuo asociado al manifiesto
-    exports.cambiarResiduoManifiesto = async (req, res) => {
-      const { id_manifiesto } = req.params;
-      const { id_residuo_nuevo } = req.body;
-
-      try {
-        const manifiesto = await Manifiesto.findByPk(id_manifiesto);
-        if (!manifiesto) {
-          return res.status(404).json({ error: 'Manifiesto no encontrado' });
-        }
-
-        await manifiesto.update({ id_residuo: id_residuo_nuevo });
-        res.status(200).json({ message: 'Residuo del manifiesto actualizado', manifiesto });
-      } catch (error) {
-        res.status(500).json({ error: 'Error al actualizar el manifiesto', details: error.message });
-      }
+    res.json(manifiestos);
+  } catch (error) {
+    console.error("Error al obtener manifiestos:", error);
+    res.status(500).json({ error: "Error al obtener manifiestos" });
+  }
 };
