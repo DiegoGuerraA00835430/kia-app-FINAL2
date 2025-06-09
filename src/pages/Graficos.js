@@ -32,10 +32,21 @@ export default function Graficos() {
   const [mostrarFiltros, setMostrarFiltros] = useState(false);
 
   useEffect(() => {
-    fetch("https://api.sheetbest.com/sheets/a7d38c70-1c41-4bea-be48-dfa70da03d19")
+    fetch("http://localhost:4002/api/manifiestos")
       .then((res) => res.json())
-      .then((data) => setDatos(data))
-      .catch((err) => console.error("Error al cargar datos:", err));
+      .then((data) => {
+        const formateado = data.map((item) => ({
+          "Nombre del residuo": item.residuo?.materialType?.name || "—",
+          "Tipo de contenedor": item.container?.name || "—",
+          "Cantidad generada Ton.": item.residuo?.cantidad || "0",
+          "Area o proceso de generacion": item.proceso?.nombre || "—",
+          "Fecha de ingreso": item.residuo?.fecha_generacion?.slice(0, 10) || "—",
+        }));
+        setDatos(formateado);
+      })
+      .catch((error) => {
+        console.error("Error al obtener los datos del backend:", error);
+      });
   }, []);
 
   const toggleArea = (area) => {

@@ -96,7 +96,7 @@ def generar_manifiesto():
 @app.get("/preview-manifiesto")
 def preview_manifiesto():
     try:
-        # Buscar último manifiesto generado
+        print("✅ Iniciando generación del PDF")
         if not os.path.exists(CONTADOR_FILE):
             return JSONResponse(status_code=404, content={"detail": "Primero genera el manifiesto."})
 
@@ -108,8 +108,11 @@ def preview_manifiesto():
         if not os.path.exists(excel_filename):
             return JSONResponse(status_code=404, content={"detail": "Excel no encontrado."})
 
-        # Convertir a PDF
+        print(f"📄 Abriendo archivo: {excel_filename}")
         pythoncom.CoInitialize()
+        import win32com.client.gencache
+        win32com.client.gencache.is_readonly = False
+        win32com.client.gencache.Rebuild()
         excel = win32.gencache.EnsureDispatch("Excel.Application")
         wb = excel.Workbooks.Open(os.path.abspath(excel_filename))
         excel.CalculateFullRebuild()
@@ -118,6 +121,8 @@ def preview_manifiesto():
         excel.Quit()
         pythoncom.CoUninitialize()
 
+        print("✅ PDF generado correctamente")
+
         return FileResponse(
             path=PDF_FILENAME,
             filename=PDF_FILENAME,
@@ -125,4 +130,5 @@ def preview_manifiesto():
         )
 
     except Exception as e:
+        print(f"❌ Error al generar PDF: {e}")
         return JSONResponse(status_code=500, content={"detail": f"Error al generar PDF: {str(e)}"})

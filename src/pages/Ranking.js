@@ -14,28 +14,40 @@ export default function Ranking() {
   };
 
   useEffect(() => {
-    fetch("https://api.sheetbest.com/sheets/a7d38c70-1c41-4bea-be48-dfa70da03d19")
-      .then((res) => res.json())
-      .then((data) => setDatos(data))
-      .catch((err) => console.error("Error al cargar datos:", err));
-  }, []);
+  fetch("http://localhost:4002/api/manifiestos")
+    .then((res) => res.json())
+    .then((data) => {
+      const formateado = data.map((item) => ({
+        "Nombre del residuo": item.residuo?.materialType?.name || "—",
+        "Tipo de contenedor": item.container?.name || "—",
+        "Cantidad generada Ton.": item.residuo?.cantidad || "0",
+        "Area o proceso de generacion": item.proceso?.nombre || "—",
+        "Fecha de ingreso": item.residuo?.fecha_generacion?.slice(0, 10) || "—",
+      }));
+      setDatos(formateado);
+    })
+    .catch((error) => {
+      console.error("Error al obtener los datos del backend:", error);
+    });
+}, []);
+
 
   const filteredData = data.filter(item => {
-    const fecha = item["Fecha de ingreso"];
-    if (!fecha) return false;
+  const fecha = item["Fecha de ingreso"];
+  if (!fecha) return false;
 
-    const partes = fecha.split("/");
-    if (partes.length !== 3) return false;
+  const partes = fecha.split("/");
+  if (partes.length !== 3) return false;
 
-    let [mesStr, diaStr, anioStr] = partes;
-    mesStr = mesStr.trim();
-    anioStr = anioStr.trim().length === 2 ? `20${anioStr.trim()}` : anioStr.trim();
+  let [mesStr, diaStr, anioStr] = partes;
+  mesStr = mesStr.trim();
+  anioStr = anioStr.trim().length === 2 ? `20${anioStr.trim()}` : anioStr.trim();
 
-    const mesNum = mesStr.padStart(2, '0');
-    const mesSeleccionado = mesANum[mes];
+  const mesNum = mesStr.padStart(2, '0');
+  const mesSeleccionado = mesANum[mes];
 
-    return mesNum === mesSeleccionado && anioStr === año;
-  });
+  return mesNum === mesSeleccionado && anioStr === año;
+});
 
   const rankings = Object.entries(
     filteredData.reduce((acc, curr) => {
