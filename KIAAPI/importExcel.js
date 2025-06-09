@@ -7,7 +7,7 @@ const { Op } = require('sequelize');
 console.log('Loaded models:', Object.keys(db));
 
 // Ruta del Excel
-const excelFilePath = path.join(__dirname, 'Bitacora RPS  2024 (3).xlsx');
+const excelFilePath = path.join(__dirname, 'Bitacora RPS  2024 (4).xlsx');
 
 // Leer Excel
 const workbook = XLSX.readFile(excelFilePath);
