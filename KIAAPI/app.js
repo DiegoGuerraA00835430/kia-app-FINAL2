@@ -11,7 +11,7 @@ const manifestoRoutes = require('./routes/manifestoRoutes');
 const datosInicialesRoutes = require('./routes/datosInicialesUnityRoutes');
 const proveedorRoutes = require('./routes/proveedorRoutes');
 const documentoRoutes = require("./routes/documentoRoutes");
-
+const contenedorRoutes = require("./routes/contenedorRoutes");
 app.use(cors({
    origin: 'http://localhost:3000',
   credentials: true
@@ -31,6 +31,8 @@ app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/proveedores', proveedorRoutes);
 app.use('/api/datos-iniciales', datosInicialesRoutes);
 app.use("/api", documentoRoutes);
+app.use("/api/contenedores", contenedorRoutes);
+
 
 
 

@@ -16,5 +16,7 @@ router.get("/manifiesto-temporal", async (req, res) => {
 
 router.post("/manifiesto-temporal", documentoController.guardarFilaTemporal);
 router.post("/documento-final", documentoController.guardarDocumentoFinal);
+router.get("/documentos/ultimo", documentoController.obtenerUltimoDocumento);
+router.get("/documentos", documentoController.obtenerTodosLosDocumentos);
 
 module.exports = router;

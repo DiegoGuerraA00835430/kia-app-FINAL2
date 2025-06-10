@@ -1,22 +1,23 @@
 module.exports = (sequelize, DataTypes) => {
   const Documento = sequelize.define("Documento", {
-    numero: {
+    nombre_archivo: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    ruta_excel: DataTypes.STRING,
-    ruta_pdf: DataTypes.STRING
+    ruta_excel: {
+      type: DataTypes.STRING
+    },
+    ruta_pdf: {
+      type: DataTypes.STRING
+    },
+    fecha_creacion: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
+    }
   }, {
     tableName: "documentos",
-    timestamps: true
+    timestamps: false
   });
-
-  Documento.associate = (models) => {
-    Documento.hasMany(models.ManifiestoFila, {
-      foreignKey: "documento_id",
-      as: "filas"
-    });
-  };
 
   return Documento;
 };
