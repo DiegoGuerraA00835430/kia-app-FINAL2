@@ -77,8 +77,14 @@ def generar_manifiesto():
                 ws[f"P{f}"] = fila[1]  # codigo
                 ws[f"S{f}"] = fila[2]  # contenedor
 
-                ws[f"V{f}"] = fila[3]  # cantidad → CANTIDAD TOTAL DE RESIDUO
-                ws[f"Y{f}"] = fila[4]  # peso → UNIDAD VOLUMEN PESO (KG)
+                peso = float(str(fila[3]).replace(",", "."))
+                cantidad = float(str(fila[4]).replace(",", "."))
+
+                ws[f"V{f}"] = peso
+                ws[f"V{f}"].number_format = '0'
+
+                ws[f"Y{f}"] = cantidad
+                ws[f"Y{f}"].number_format = '0.00'
 
         wb.save(excel_filename)
         wb.close()
