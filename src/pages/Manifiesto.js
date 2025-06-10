@@ -36,7 +36,7 @@ export default function Manifiesto() {
       });
 
       if (!res.ok) throw new Error("Error al guardar fila.");
-      alert("Fila agregada al manifiesto correctamente.");
+      
     } catch (error) {
       console.error("Error al enviar fila:", error);
       alert("No se pudo agregar la fila al manifiesto.");

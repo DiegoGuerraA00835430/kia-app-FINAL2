@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import Navbar from "../components/Navbar";
+
 
 const Dashboard = () => {
   const iframeRef = useRef(null);
@@ -28,7 +28,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <Navbar />
+     
       <div style={{ textAlign: "center", paddingTop: "2rem" }}>
         <iframe
           ref={iframeRef}
