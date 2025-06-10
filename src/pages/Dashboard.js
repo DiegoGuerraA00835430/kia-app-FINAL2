@@ -28,7 +28,6 @@ const Dashboard = () => {
 
   return (
     <>
-      <Navbar />
       <div style={{ textAlign: "center", paddingTop: "2rem" }}>
         <iframe
           ref={iframeRef}
