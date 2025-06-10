@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity Web Player | PrimerAppKIA</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+  </head>
+  <body>
+    <div id="unity-container" class="unity-desktop">
+      <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
+      <div id="unity-loading-bar">
+        <div id="unity-logo"></div>
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full"></div>
+        </div>
+      </div>
+      <div id="unity-warning"> </div>
+      <div id="unity-footer">
+        <div id="unity-logo-title-footer"></div>
+        <div id="unity-fullscreen-button"></div>
+        <div id="unity-build-title">PrimerAppKIA</div>
+      </div>
+    </div>
+    <script>
+      var canvas = document.querySelector("#unity-canvas");
+      function unityShowBanner(msg, type) {
+        var warningBanner = document.querySelector("#unity-warning");
+        function updateBannerVisibility() {
+          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+        }
+        var div = document.createElement('div');
+        div.innerHTML = msg;
+        warningBanner.appendChild(div);
+        if (type == 'error') div.style = 'background: red; padding: 10px;';
+        else {
+          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+          setTimeout(function() {
+            warningBanner.removeChild(div);
+            updateBannerVisibility();
+          }, 5000);
+        }
+        updateBannerVisibility();
+      }
+
+      var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/buildWEBGL.loader.js";
+      var config = {
+        arguments: [],
+        dataUrl: buildUrl + "/buildWEBGL.data",
+        frameworkUrl: buildUrl + "/buildWEBGL.framework.js",
+        codeUrl: buildUrl + "/buildWEBGL.wasm",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "DefaultCompany",
+        productName: "PrimerAppKIA",
+        productVersion: "1.0",
+        showBanner: unityShowBanner,
+      };
+
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+        document.querySelector("#unity-container").className = "unity-mobile";
+        canvas.className = "unity-mobile";
+      } else {
+        canvas.style.width = "960px";
+        canvas.style.height = "600px";
+      }
+
+      document.querySelector("#unity-loading-bar").style.display = "block";
+
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
+        }).then((unityInstance) => {
+      window.unityInstance = unityInstance;
+      document.querySelector("#unity-loading-bar").style.display = "none";
+      document.querySelector("#unity-fullscreen-button").onclick = () => {
+        unityInstance.SetFullscreen(1);
+      };
+
+      // Si ya recibimos el token antes de que Unity estuviera listo
+      if (window.pendingToken) {
+        unityInstance.SendMessage('SesionEmpleado', 'SetToken', window.pendingToken);
+        console.log("🔄 Token enviado a Unity tras inicialización:", window.pendingToken);
+        window.pendingToken = null;
+        window.tokenAlreadySent = true;
+      }
+    });
+          };
+          document.body.appendChild(script);
+        </script>
+
+    <!-- === Aquí va el bloque para recibir el token SOLO una vez === -->
+    <script>
+  window.tokenAlreadySent = false;
+  window.pendingToken = null;
+
+  window.addEventListener("message", function(event) {
+    if (event.data && event.data.type === "SET_TOKEN") {
+      if (!window.tokenAlreadySent) {
+        if (window.unityInstance) {
+          window.unityInstance.SendMessage('SesionEmpleado', 'SetToken', event.data.token);
+          console.log("✅ Token enviado a Unity:", event.data.token);
+          window.tokenAlreadySent = true;
+        } else {
+          console.log("⏳ Unity no listo, guardando token para enviar después...");
+          window.pendingToken = event.data.token;
+        }
+      }
+    }
+  });
+</script>
+
+  </body>
+</html>
