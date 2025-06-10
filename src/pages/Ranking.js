@@ -33,21 +33,14 @@ export default function Ranking() {
 
 
   const filteredData = data.filter(item => {
-  const fecha = item["Fecha de ingreso"];
-  if (!fecha) return false;
+    const fecha = item["Fecha de ingreso"];
+    if (!fecha) return false;
 
-  const partes = fecha.split("/");
-  if (partes.length !== 3) return false;
+    const [anioStr, mesStr] = fecha.split("-");
+    const mesSeleccionado = mesANum[mes];
 
-  let [mesStr, diaStr, anioStr] = partes;
-  mesStr = mesStr.trim();
-  anioStr = anioStr.trim().length === 2 ? `20${anioStr.trim()}` : anioStr.trim();
-
-  const mesNum = mesStr.padStart(2, '0');
-  const mesSeleccionado = mesANum[mes];
-
-  return mesNum === mesSeleccionado && anioStr === año;
-});
+    return mesStr === mesANum[mes] && anioStr === año;
+  });
 
   const rankings = Object.entries(
     filteredData.reduce((acc, curr) => {

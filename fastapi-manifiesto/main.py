@@ -1,3 +1,4 @@
+from collections import defaultdict
 from fastapi import FastAPI
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -7,7 +8,7 @@ import shutil
 import os
 import pythoncom
 import win32com.client as win32
-
+import requests
 
 app = FastAPI()
 
@@ -19,7 +20,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Archivos base
 PLANTILLA = "Manifiesto_Preview.xlsx"
 CONTADOR_FILE = "contador.txt"
 PDF_FILENAME = "Manifiesto_Preview.pdf"
@@ -36,10 +36,7 @@ def obtener_siguiente_numero():
         data = f.read().strip()
         prev_anio, prev_contador = map(int, data.split(","))
 
-    if prev_anio != anio:
-        contador = 1
-    else:
-        contador = prev_contador + 1
+    contador = 1 if prev_anio != anio else prev_contador + 1
 
     with open(CONTADOR_FILE, "w") as f:
         f.write(f"{anio},{contador}")
@@ -53,19 +50,40 @@ def generar_manifiesto():
         return JSONResponse(status_code=404, content={"detail": "Plantilla no encontrada."})
 
     try:
+        response = requests.get("http://localhost:4002/api/manifiesto-temporal")
+        if response.status_code != 200:
+            raise Exception("No se pudieron obtener las filas temporales")
+        datos_json = response.json()
+
+        # Agrupar por nombre
+        agrupados = defaultdict(lambda: {
+            "codigo": "",
+            "contenedor": "",
+            "cantidad": 0.0,
+            "peso": 0.0
+        })
+
+        for fila in datos_json:
+            nombre = fila["nombre"]
+            agrupados[nombre]["codigo"] = fila.get("codigo", "")
+            agrupados[nombre]["contenedor"] = fila.get("contenedor", "")
+            agrupados[nombre]["cantidad"] += float(fila.get("cantidad", 0))
+            agrupados[nombre]["peso"] += float(fila.get("peso", 0))
+
+        datos = [
+            [nombre, datos["codigo"], datos["contenedor"], datos["cantidad"], datos["peso"]]
+            for nombre, datos in agrupados.items()
+        ]
+
+        if not datos:
+            raise Exception("No hay datos para generar el manifiesto")
+
+        # Obtener número y guardar el nombre exacto del archivo
         num_manifiesto, _ = obtener_siguiente_numero()
         excel_filename = f"Manifiesto {num_manifiesto} SAI.xlsx"
 
         shutil.copyfile(PLANTILLA, excel_filename)
         wb = load_workbook(excel_filename)
-
-        datos = [
-            ["Trapos, guantes y textiles contaminados con aceite hidraulico,pintura, thinner y grasa provenientes de actividades de limpieza, operación y mantenimiento", "200", "Tambor", "0.5", "100"],
-            ["Disolvente", "150", "Cont. plástico", "0.8", "1000"],
-            ["Pintura vencida", "100", "Lata", "0.3", "2000"],
-            ["Fango industrial", "250", "Tambor", "1.2", "400"],
-            ["Líquido refrigerante", "180", "Bidón", "0.6", "213"]
-        ]
 
         for idx in range(4):
             ws = wb.worksheets[idx]
@@ -73,12 +91,12 @@ def generar_manifiesto():
             fila_inicio = 20
             for i, fila in enumerate(datos):
                 f = fila_inicio + i
-                ws[f"B{f}"] = fila[0]
-                ws[f"P{f}"] = fila[1]
-                ws[f"S{f}"] = fila[2]
+                ws[f"B{f}"] = fila[0]  # nombre
+                ws[f"P{f}"] = fila[1]  # código
+                ws[f"S{f}"] = fila[2]  # contenedor
                 if f < 31:
-                    ws[f"V{f}"] = fila[3]
-                    ws[f"Y{f}"] = fila[4]
+                    ws[f"V{f}"] = fila[3]  # cantidad
+                    ws[f"Y{f}"] = fila[4]  # peso
 
         wb.save(excel_filename)
         wb.close()
