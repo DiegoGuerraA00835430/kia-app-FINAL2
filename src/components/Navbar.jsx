@@ -62,22 +62,22 @@ const Navbar = () => {
 
   return (
     <header className="navbar">
-      <div className="nav-left">
+      <img src="/logo.png" alt="KIA logo" className="logo" />
+      <nav className="nav-center">
         <Link to="/dashboard" className="nav-link">Dashboard</Link>
         <Link to="/reporte" className="nav-link">Reporte</Link>
         <Link to="/graficos" className="nav-link">Gráficos</Link>
         <Link to="/ranking" className="nav-link">Ranking</Link>
         <Link to="/manifiesto" className="nav-link">Manifiesto</Link>
-
-        <div
-          ref={dropdownRef}
-          style={{ position: "relative", display: "flex", alignItems: "center" }}
-        >
+      </nav>
+      <div className="nav-right">
+        <div ref={dropdownRef} className="user-dropdown-container">
           <button
             onClick={() => setShowDropdown(!showDropdown)}
             className="nav-user-button"
+            aria-label="User menu"
           >
-            👤
+            {getInitials(userName)}
           </button>
 
           {showDropdown && (
@@ -105,8 +105,6 @@ const Navbar = () => {
           )}
         </div>
       </div>
-
-      <img src="/logo.png" alt="KIA logo" className="logo" />
     </header>
   );
 };
