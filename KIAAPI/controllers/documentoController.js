@@ -12,7 +12,7 @@ exports.guardarFilaTemporal = async (req, res) => {
   }
 
   try {
-    await db.ManifiestoTemp.create({ nombre, cantidad, contenedor, peso, codigo });
+    await db.ManifiestoTemp.create({ nombre, cantidad: 1, contenedor, peso: cantidad, codigo });
     res.status(201).json({ mensaje: "Fila guardada correctamente" });
   } catch (error) {
     console.error("❌ Error al guardar fila temporal:", error);
