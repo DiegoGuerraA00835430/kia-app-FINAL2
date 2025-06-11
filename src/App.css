@@ -475,8 +475,7 @@ body {
 }
 
 .tabla-reporte {
-  margin: auto;
-  background-color: white;
+  width: 100%;
   min-width: 1200px;
   border-collapse: collapse;
   font-size: 14px;
@@ -484,14 +483,17 @@ body {
 
 .tabla-reporte th,
 .tabla-reporte td {
-  border: 1px solid #ccc;
   padding: 8px;
   text-align: left;
+  white-space: normal;
+  vertical-align: top;
+  line-height: 1.4;
 }
 
 .tabla-reporte th {
-  background-color: #f2f2f2;
-  font-weight: bold;
+  font-weight: normal;
+  color: #333;
+  border-bottom: 1px solid #ddd;
 }
 
 /* Keep the existing filter styles */
