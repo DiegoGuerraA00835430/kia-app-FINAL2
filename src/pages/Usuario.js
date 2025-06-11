@@ -58,19 +58,19 @@ export default function Usuario() {
 
   const eliminarEmpleado = async (id) => {
     if (window.confirm('¿Está seguro de que desea eliminar este usuario?')) {
-      try {
-        await axios.delete(`http://localhost:4002/api/usuarios/${id}`);
-        setEmpleados(empleados.filter(emp => emp.numero_empleado !== id));
+    try {
+      await axios.delete(`http://localhost:4002/api/usuarios/${id}`);
+      setEmpleados(empleados.filter(emp => emp.numero_empleado !== id));
         setSuccess('Usuario eliminado exitosamente');
-      } catch (err) {
+    } catch (err) {
         setError('Error al eliminar usuario');
-        console.error('Error al eliminar usuario', err);
+      console.error('Error al eliminar usuario', err);
       }
     }
   };
 
   return (
-    <main className="content">
+      <main className="content">
       <div className="page-container">
         <div className="page-header">
           <h1 className="page-title">Gestión de Usuarios</h1>
@@ -83,66 +83,66 @@ export default function Usuario() {
             <div className="form-grid">
               <div className="form-group">
                 <label className="form-label">Nombre</label>
-                <input
-                  type="text"
+          <input
+            type="text"
                   className="form-input"
-                  value={form.nombre}
-                  onChange={(e) => setForm({ ...form, nombre: e.target.value })}
+            value={form.nombre}
+            onChange={(e) => setForm({ ...form, nombre: e.target.value })}
                   placeholder="Nombre completo"
-                  required
-                />
+            required
+          />
               </div>
 
               <div className="form-group">
                 <label className="form-label">Cargo</label>
-                <select
+          <select
                   className="form-select"
-                  value={form.cargo}
-                  onChange={(e) => setForm({ ...form, cargo: e.target.value })}
-                  required
-                >
-                  <option value="" disabled>Seleccionar cargo</option>
+            value={form.cargo}
+            onChange={(e) => setForm({ ...form, cargo: e.target.value })}
+            required
+          >
+            <option value="" disabled>Seleccionar cargo</option>
                   <option value="Admin">Administrador</option>
-                  <option value="Auditor">Auditor</option>
-                </select>
+            <option value="Auditor">Auditor</option>
+          </select>
               </div>
 
               <div className="form-group">
                 <label className="form-label">Número de empleado</label>
-                <input
-                  type="text"
+          <input
+            type="text"
                   className="form-input"
-                  value={form.numero_empleado}
-                  onChange={(e) => setForm({ ...form, numero_empleado: e.target.value })}
+            value={form.numero_empleado}
+            onChange={(e) => setForm({ ...form, numero_empleado: e.target.value })}
                   placeholder="8 dígitos"
                   maxLength="8"
                   pattern="\d{8}"
-                  required
-                />
+            required
+          />
               </div>
 
               <div className="form-group">
                 <label className="form-label">Contraseña</label>
-                <input
-                  type="password"
+          <input
+            type="password"
                   className="form-input"
-                  value={form.contrasena}
-                  onChange={(e) => setForm({ ...form, contrasena: e.target.value })}
+            value={form.contrasena}
+            onChange={(e) => setForm({ ...form, contrasena: e.target.value })}
                   placeholder="Contraseña"
-                  required
-                />
+            required
+          />
               </div>
 
               <div className="form-group">
                 <label className="form-label">Confirmar contraseña</label>
-                <input
-                  type="password"
+          <input
+            type="password"
                   className="form-input"
-                  value={form.confirmar}
-                  onChange={(e) => setForm({ ...form, confirmar: e.target.value })}
+            value={form.confirmar}
+            onChange={(e) => setForm({ ...form, confirmar: e.target.value })}
                   placeholder="Confirmar contraseña"
-                  required
-                />
+            required
+          />
               </div>
             </div>
 
@@ -154,7 +154,7 @@ export default function Usuario() {
                 Crear Usuario
               </button>
             </div>
-          </form>
+        </form>
         </div>
 
         {/* Users List */}
@@ -162,39 +162,39 @@ export default function Usuario() {
           <h2 className="section-title">Lista de Usuarios</h2>
           <div className="users-table-container">
             <table className="users-table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Nombre</th>
-                  <th>Puesto</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {empleados.map(emp => (
-                  <tr key={emp.numero_empleado}>
-                    <td>{emp.numero_empleado}</td>
-                    <td>{emp.nombre}</td>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Puesto</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {empleados.map(emp => (
+                <tr key={emp.numero_empleado}>
+                  <td>{emp.numero_empleado}</td>
+                  <td>{emp.nombre}</td>
                     <td>
                       <span className={`role-badge ${emp.cargo.toLowerCase()}`}>
                         {emp.cargo}
                       </span>
                     </td>
-                    <td>
+                  <td>
                       <button 
                         className="btn-delete"
                         onClick={() => eliminarEmpleado(emp.numero_empleado)}
                       >
                         Eliminar
                       </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
           </div>
         </div>
-      </div>
-    </main>
+        </div>
+      </main>
   );
 }

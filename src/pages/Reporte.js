@@ -115,62 +115,23 @@ export default function Reporte() {
   const datosPaginados = datosFiltrados.slice((paginaActual - 1) * elementosPorPagina, paginaActual * elementosPorPagina);
 
   const exportToExcelWithLanguage = async (language) => {
-    // Create a new workbook and worksheet
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Reporte de Residuos');
 
-    // Define the columns with language-specific headers
-    const columns = [
-      { header: 'Item', key: 'item' },
-      { header: language === 'en' ? 'Waste name' : 'Nombre del residuo', key: 'residuo' },
-      { header: language === 'en' ? 'Container type' : 'Tipo de contenedor', key: 'contenedor' },
-      { header: language === 'en' ? 'Generated amount Ton.' : 'Cantidad generada Ton.', key: 'cantidad' },
-      { header: language === 'en' ? 'Elements' : 'Elementos', key: 'elementos' },
-      { header: language === 'en' ? 'Generation area or process' : 'Área o proceso de generación', key: 'area' },
-      { header: language === 'en' ? 'Entry date' : 'Fecha de ingreso', key: 'fechaIngreso' },
-      { header: language === 'en' ? 'Exit date' : 'Fecha de salida', key: 'fechaSalida' },
-      { header: 'Art. 71 fracción I inciso (e)', key: 'art71' },
-      { header: language === 'en' ? 'Name, denomination or company name' : 'Nombre, denominación o razón social', key: 'transportista' },
-      { header: language === 'en' ? 'SEMARNAT authorization number' : 'Número de autorización SEMARNAT', key: 'authSemarnat' },
-      { header: language === 'en' ? 'SCT authorization number' : 'Número de autorización SCT', key: 'authSct' },
-      { header: language === 'en' ? 'Name, denomination or company name' : 'Nombre, denominación o razón social', key: 'destino' },
-      { header: language === 'en' ? 'Authorization number' : 'Número de autorización', key: 'authDestino' },
-      { header: language === 'en' ? 'Technical Manager Name' : 'Nombre Responsable Técnico', key: 'responsable' }
-    ];
+    // Add headers
+    const headers = Object.keys(datos[0] || {});
+    worksheet.columns = headers.map(header => ({
+      header,
+      key: header,
+      width: 15
+    }));
 
-    worksheet.columns = columns;
-
-    // Add data rows with translated waste names if English is selected
-    datosFiltrados.forEach((row, index) => {
-      const wasteName = language === 'en' 
-        ? (wasteNameTranslations[row["Nombre del residuo"]] || row["Nombre del residuo"])
-        : row["Nombre del residuo"];
-
-      worksheet.addRow({
-        item: index + 1,
-        residuo: wasteName,
-        contenedor: row["Tipo de contenedor"],
-        cantidad: row["Cantidad generada Ton."],
-        elementos: row["Elementos"],
-        area: row["Área o proceso de generación"],
-        fechaIngreso: row["Fecha de ingreso"],
-        fechaSalida: row["Fecha de salida"],
-        art71: row["Art. 71 fracción I inciso (e)"],
-        transportista: row["Transportista"],
-        authSemarnat: row["Autorización SEMARNAT"],
-        authSct: row["Autorización SCT"],
-        destino: row["Destino"],
-        authDestino: row["Autorización destino"],
-        responsable: row["Responsable Técnico"]
-      });
+    // Add data
+    datosFiltrados.forEach(row => {
+      worksheet.addRow(row);
     });
 
-    // Set a fixed row height for all rows
-    worksheet.eachRow((row) => {
-      row.height = 25;
-    });
-
-    // Style the header row
+    // Style header row
     const headerRow = worksheet.getRow(1);
     headerRow.eachCell((cell) => {
       cell.fill = {
@@ -189,29 +150,18 @@ export default function Reporte() {
       };
     });
 
-    // Auto-fit columns and ensure text wrapping
-    worksheet.columns.forEach(column => {
-      let maxLength = 0;
-      column.eachCell({ includeEmpty: true }, (cell) => {
-        const length = cell.value ? cell.value.toString().length : 10;
-        maxLength = Math.max(maxLength, length);
-      });
-      column.width = Math.min(maxLength + 2, 50);
-      column.eachCell({ includeEmpty: true }, (cell) => {
-        cell.alignment = {
-          wrapText: true,
-          vertical: 'middle'
-        };
-      });
+    // Set row height
+    worksheet.eachRow((row) => {
+      row.height = 25;
     });
 
-    // Get current date and time for filename
+    // Generate filename with date
     const now = new Date();
     const dateStr = now.toISOString().slice(0, 10);
     const timeStr = now.toTimeString().slice(0, 8).replace(/:/g, '-');
     const fileName = `Reporte_Residuos_${language === 'en' ? 'EN' : 'ES'}_${dateStr}_${timeStr}.xlsx`;
 
-    // Generate the file
+    // Save file
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     const url = window.URL.createObjectURL(blob);
@@ -223,7 +173,6 @@ export default function Reporte() {
     setShowLanguageModal(false);
   };
 
-  // Language selection modal component
   const LanguageModal = () => (
     <div className="language-modal-overlay">
       <div className="language-modal">
@@ -341,22 +290,22 @@ export default function Reporte() {
               <div className="filters-row">
                 <div className="filter-item">
                   <label className="filter-label">Fecha inicio</label>
-                  <input
-                    type="date"
+                  <input 
+                    type="date" 
                     className="filter-input"
-                    value={fechaInicio}
-                    onChange={(e) => setFechaInicio(e.target.value)}
+                    value={fechaInicio} 
+                    onChange={(e) => setFechaInicio(e.target.value)} 
                     placeholder="dd/mm/yyyy"
                   />
                 </div>
 
                 <div className="filter-item">
                   <label className="filter-label">Fecha final</label>
-                  <input
-                    type="date"
+                  <input 
+                    type="date" 
                     className="filter-input"
-                    value={fechaFin}
-                    onChange={(e) => setFechaFin(e.target.value)}
+                    value={fechaFin} 
+                    onChange={(e) => setFechaFin(e.target.value)} 
                     placeholder="dd/mm/yyyy"
                   />
                 </div>
@@ -376,9 +325,9 @@ export default function Reporte() {
               <div className="filters-row">
                 <div className="filter-item">
                   <label className="filter-label">Orden por cantidad</label>
-                  <select
+                  <select 
                     className="filter-select"
-                    value={ordenCantidad}
+                    value={ordenCantidad} 
                     onChange={(e) => setOrdenCantidad(e.target.value)}
                   >
                     <option value="">Sin orden</option>
@@ -389,9 +338,9 @@ export default function Reporte() {
 
                 <div className="filter-item">
                   <label className="filter-label">Orden por fecha</label>
-                  <select
+                  <select 
                     className="filter-select"
-                    value={ordenFecha}
+                    value={ordenFecha} 
                     onChange={(e) => setOrdenFecha(e.target.value)}
                   >
                     <option value="">Sin orden</option>
