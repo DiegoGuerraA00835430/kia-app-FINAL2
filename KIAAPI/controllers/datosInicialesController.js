@@ -3,13 +3,13 @@ const db = require('../models');
 exports.obtenerDatosIniciales = async (req, res) => {
   try {
     const [
-      residuos,
+      materialTypes,
       contenedores,
       procesos,
       manejos,
       proveedores
     ] = await Promise.all([
-      db.Residuo.findAll(),
+      db.Material_type.findAll(),
       db.Container.findAll(),
       db.Proceso.findAll(),
       db.Manejo.findAll(),
@@ -20,7 +20,7 @@ exports.obtenerDatosIniciales = async (req, res) => {
     const proveedoresDestino = proveedores.filter(p => p.tipo_proveedor === 'Receptora');
 
     res.json({
-      residuos,
+      materialTypes,
       contenedores,
       procesos,
       manejos,

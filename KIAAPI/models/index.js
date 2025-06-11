@@ -1,12 +1,10 @@
-// index.js
-
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
 const basename = path.basename(__filename);
 const sequelize = require('../config/database.js');
 
-const db = {};
+const db = {}; // ✅ ahora se declara antes
 
 // Step 1: Load model definitions
 fs
@@ -20,6 +18,9 @@ fs
     const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
     db[model.name] = model;
   });
+
+// ✅ Aquí sí puedes usar db:
+db.ManifiestoTemp = require("./ManifiestoTemp")(sequelize, Sequelize.DataTypes);
 
 // Step 2: Run associate methods
 Object.values(db)

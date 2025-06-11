@@ -188,3 +188,18 @@ exports.obtenerManifiestos = async (req, res) => {
     res.status(500).json({ error: "Error al obtener manifiestos" });
   }
 };
+
+
+
+exports.guardarFilaParaManifiesto = async (req, res) => {
+  const { nombre, cantidad, contenedor, peso, codigo } = req.body;
+
+  try {
+    // Aquí puedes usar Sequelize o SQL puro para guardar en una tabla temporal
+    await db.ManifiestoTemp.create({ nombre, cantidad, contenedor, peso, codigo });
+    res.status(201).json({ mensaje: "Fila guardada en la base de datos temporal" });
+  } catch (error) {
+    console.error("❌ Error:", error);
+    res.status(500).json({ error: "No se pudo guardar la fila" });
+  }
+};
