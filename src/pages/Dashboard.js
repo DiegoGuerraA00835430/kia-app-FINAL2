@@ -74,7 +74,7 @@ const Dashboard = () => {
             title="UnityWebGL"
             src="/buildWEBGL/index.html"
             width="960"
-            height="600"
+            height="540"
             frameBorder="0"
             allowFullScreen
             onLoad={handleUnityLoaded}
