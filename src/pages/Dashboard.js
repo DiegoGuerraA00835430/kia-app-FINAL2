@@ -27,7 +27,6 @@ const Dashboard = () => {
   };
 
   return (
-<<<<<<< HEAD
     <main className="content">
       <div className="dashboard-container">
         <h1 className="dashboard-title">Recolección de datos</h1>
@@ -67,24 +66,23 @@ const Dashboard = () => {
             <p>Métricas de desempeño</p>
           </div>
         </div>
-=======
-    <>
 
-      <div style={{ textAlign: "center", paddingTop: "2rem" }}>
-        <iframe
-          ref={iframeRef}
-          id="unity-frame"
-          title="UnityWebGL"
-          src="/buildWEBGL/index.html"
-          width="960"
-          height="600"
-          frameBorder="0"
-          allowFullScreen
-          onLoad={handleUnityLoaded}
-        />
->>>>>>> ad5a251e09b231666a14ccf9c6d052c1118cfd96
+        <div style={{ textAlign: "center", paddingTop: "2rem" }}>
+          <iframe
+            ref={iframeRef}
+            id="unity-frame"
+            title="UnityWebGL"
+            src="/buildWEBGL/index.html"
+            width="960"
+            height="600"
+            frameBorder="0"
+            allowFullScreen
+            onLoad={handleUnityLoaded}
+          />
+        </div>
       </div>
-    </>
+    </main>
   );
 };
+
 export default Dashboard;
