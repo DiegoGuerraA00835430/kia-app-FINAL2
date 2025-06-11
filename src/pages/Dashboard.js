@@ -67,20 +67,21 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div style={{ textAlign: "center", paddingTop: "2rem" }}>
-          <iframe
-            ref={iframeRef}
-            id="unity-frame"
-            title="UnityWebGL"
-            src="/buildWEBGL/index.html"
-            width="960"
-            height="540"
-            frameBorder="0"
-            allowFullScreen
-            onLoad={handleUnityLoaded}
-          />
-        </div>
+        
       </div>
+        <div className="unity-card-wrapper">
+          <div className="unity-card">
+            <iframe
+              className="unity-card-iframe"
+              ref={iframeRef}
+              id="unity-frame"
+              title="UnityWebGL"
+              src="/buildWEBGL/index.html"
+              allowFullScreen
+              onLoad={handleUnityLoaded}
+            />
+          </div>
+        </div>
     </main>
   );
 };

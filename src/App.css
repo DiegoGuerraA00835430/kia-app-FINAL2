@@ -1384,3 +1384,30 @@ body {
   color: #2e7d32;
   border: 1px solid #c8e6c9;
 }
+
+.unity-card-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 0; /* adjust for top/bottom spacing */
+  background: #f8f9fa; /* your site color */
+}
+
+.unity-card {
+  width: 90vw;
+  max-width: 1200px;
+  aspect-ratio: 16/9;
+  background: #979ba9; /* Unity background, or leave transparent for actual Unity bg */
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.10);
+  position: relative;
+}
+
+.unity-card-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
