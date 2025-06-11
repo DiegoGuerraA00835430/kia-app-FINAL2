@@ -89,11 +89,3 @@ KIA-APP-FINAL2/
 2. Abre `http://localhost:3000` 
 
 
-## 🔁 Próximos pasos sugeridos
-
-- Convertir los datos fijos en `main.py` en un endpoint POST para enviar datos desde React.
-- Añadir control de fechas o filtros.
-- Agregar autenticación si se requiere proteger el manifiesto.
-
----
-
