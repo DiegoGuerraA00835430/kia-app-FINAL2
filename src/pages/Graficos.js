@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   PieChart,
   Pie,
@@ -30,6 +30,20 @@ export default function Graficos() {
   const [areasSeleccionadas, setAreasSeleccionadas] = useState([]);
   const [mostrarDropdown, setMostrarDropdown] = useState(false);
   const [mostrarFiltros, setMostrarFiltros] = useState(false);
+  const [showAreaDropdown, setShowAreaDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Define the areas array
+  const areas = [
+    "Pintura",
+    "Ensamble",
+    "Calidad",
+    "Almacén",
+    "Mantenimiento",
+    "Oficinas",
+    "Comedor",
+    "Exterior"
+  ];
 
   useEffect(() => {
     fetch("http://localhost:4002/api/manifiestos")
@@ -50,9 +64,11 @@ export default function Graficos() {
   }, []);
 
   const toggleArea = (area) => {
-    setAreasSeleccionadas((prev) =>
-      prev.includes(area) ? prev.filter(a => a !== area) : [...prev, area]
-    );
+    if (areasSeleccionadas.includes(area)) {
+      setAreasSeleccionadas(areasSeleccionadas.filter(a => a !== area));
+    } else {
+      setAreasSeleccionadas([...areasSeleccionadas, area]);
+    }
   };
 
   const toggleSeleccionarTodo = () => {
@@ -105,11 +121,16 @@ export default function Graficos() {
     return Object.values(mapa).sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
   };
 
+  const aplicarFiltros = () => {
+    // Implement filter logic here
+  };
+
   return (
     <main className="content">
-      <div className="page-container">
+    <div className="page-container">
         <div className="page-header">
-          <h1 className="page-title">Análisis de Residuos</h1>
+          <h1 className="page-title">Gráficos de Residuos</h1>
+          <div className="header-buttons">
           <button 
             className="filter-button"
             onClick={() => setMostrarFiltros(!mostrarFiltros)}
@@ -118,7 +139,8 @@ export default function Graficos() {
               <path d="M3 6h18M3 12h18M3 18h18" />
             </svg>
             <span>Filtros</span>
-          </button>
+        </button>
+          </div>
         </div>
 
         {mostrarFiltros && (
@@ -127,57 +149,61 @@ export default function Graficos() {
               <div className="filters-row">
                 <div className="filter-item">
                   <label className="filter-label">Fecha inicio</label>
-                  <input
-                    type="date"
+              <input
+                type="date"
                     className="filter-input"
-                    value={fechaInicio}
-                    onChange={(e) => setFechaInicio(e.target.value)}
+                value={fechaInicio}
+                onChange={(e) => setFechaInicio(e.target.value)}
                     placeholder="dd/mm/yyyy"
-                  />
+              />
                 </div>
 
                 <div className="filter-item">
                   <label className="filter-label">Fecha final</label>
-                  <input
-                    type="date"
+              <input
+                type="date"
                     className="filter-input"
-                    value={fechaFin}
-                    onChange={(e) => setFechaFin(e.target.value)}
+                value={fechaFin}
+                onChange={(e) => setFechaFin(e.target.value)}
                     placeholder="dd/mm/yyyy"
-                  />
+              />
                 </div>
-              </div>
+            </div>
 
               <div className="filter-item">
                 <label className="filter-label">Áreas</label>
-                <select 
-                  className="filter-select"
-                  onClick={() => setMostrarDropdown(!mostrarDropdown)}
+                <div 
+                  className="area-dropdown-toggle"
+                  onClick={() => setShowAreaDropdown(!showAreaDropdown)}
+                  ref={dropdownRef}
                 >
-                  <option value="">Seleccionar áreas</option>
-                </select>
-                {mostrarDropdown && (
-                  <div className="area-dropdown">
-                    <label className="area-checkbox">
-                      <input
-                        type="checkbox"
-                        checked={areasSeleccionadas.length === AREAS.length}
-                        onChange={toggleSeleccionarTodo}
-                      />
-                      <span>Seleccionar todo</span>
-                    </label>
-                    {AREAS.map((area) => (
+                  {areasSeleccionadas.length 
+                    ? `${areasSeleccionadas.length} áreas seleccionadas` 
+                    : "Seleccionar áreas"}
+                </div>
+                {showAreaDropdown && (
+                <div className="area-dropdown">
+                    {areas.map(area => (
                       <label key={area} className="area-checkbox">
                         <input
                           type="checkbox"
                           checked={areasSeleccionadas.includes(area)}
                           onChange={() => toggleArea(area)}
-                        />
+                      />
                         <span>{area}</span>
-                      </label>
-                    ))}
-                  </div>
-                )}
+                    </label>
+                  ))}
+                </div>
+              )}
+              </div>
+
+              <div className="filter-actions">
+                <button 
+                  className="btn-primary"
+                  onClick={aplicarFiltros}
+                >
+                  Aplicar Filtros
+                </button>
               </div>
             </div>
           </div>
@@ -186,23 +212,23 @@ export default function Graficos() {
         <h2 className="chart-title">Proporción de Residuos por Área</h2>
 
         <div className="charts-container">
-          <div className="chart-section">
+        <div className="chart-section">
             <div className="chart-content">
-              <ResponsiveContainer width={400} height={400}>
-                <PieChart>
-                  <Pie
-                    data={datosPieChart}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={120}
+          <ResponsiveContainer width={400} height={400}>
+            <PieChart>
+              <Pie
+                data={datosPieChart}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius={120}
                     isAnimationActive={true}
-                  >
-                    {datosPieChart.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
+              >
+                {datosPieChart.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
                   <Tooltip 
                     formatter={(value) => `${value.toFixed(2)} ton`}
                     contentStyle={{
@@ -212,18 +238,18 @@ export default function Graficos() {
                       boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
                     }}
                   />
-                </PieChart>
-              </ResponsiveContainer>
+            </PieChart>
+          </ResponsiveContainer>
 
               <div className="chart-legend">
-                {datosPieChart.map((entry, index) => {
-                  const total = datosPieChart.reduce((sum, d) => sum + d.value, 0);
-                  const porcentaje = ((entry.value / total) * 100).toFixed(1);
-                  return (
+              {datosPieChart.map((entry, index) => {
+                const total = datosPieChart.reduce((sum, d) => sum + d.value, 0);
+                const porcentaje = ((entry.value / total) * 100).toFixed(1);
+                return (
                     <div key={index} className="legend-item">
-                      <span
+                    <span
                         className="legend-color"
-                        style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                      style={{ backgroundColor: COLORS[index % COLORS.length] }}
                       />
                       <span className="legend-text">
                         {entry.name}
@@ -232,17 +258,17 @@ export default function Graficos() {
                         </span>
                       </span>
                     </div>
-                  );
-                })}
+                );
+              })}
               </div>
-            </div>
           </div>
+        </div>
 
           <div className="chart-section">
             <h2 className="chart-title">Tendencia de Residuos por Área</h2>
             <div className="chart-content">
-              <ResponsiveContainer width="100%" height={400}>
-                <LineChart data={transformarParaLineChart()}>
+        <ResponsiveContainer width="100%" height={400}>
+          <LineChart data={transformarParaLineChart()}>
                   <XAxis 
                     dataKey="fecha"
                     tick={{ fill: '#05141f' }}
@@ -260,24 +286,24 @@ export default function Graficos() {
                       boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
                     }}
                   />
-                  <Legend />
-                  {areasUnicas.map((area, index) => (
-                    <Line
-                      key={area}
-                      type="monotone"
-                      dataKey={area}
-                      stroke={COLORS[index % COLORS.length]}
-                      strokeWidth={2}
+            <Legend />
+            {areasUnicas.map((area, index) => (
+              <Line
+                key={area}
+                type="monotone"
+                dataKey={area}
+                stroke={COLORS[index % COLORS.length]}
+                strokeWidth={2}
                       dot={{ r: 2 }}
                       activeDot={{ r: 6 }}
-                    />
-                  ))}
-                </LineChart>
-              </ResponsiveContainer>
+              />
+            ))}
+          </LineChart>
+        </ResponsiveContainer>
             </div>
           </div>
         </div>
       </div>
-    </main>
+      </main>
   );
 }
