@@ -4,9 +4,8 @@ import "../App.css";
 export default function Manifiesto() {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [datosFiltrados, setDatosFiltrados] = useState([]);
-  const [checkedRows, setCheckedRows] = useState({});  // << Nuevo estado para checkboxes
+  const [checkedRows, setCheckedRows] = useState({});
 
-  // Obtener datos con fecha_emision null desde KIAAPI
   const crearManifiesto = async () => {
     try {
       const resp = await fetch("http://localhost:4002/api/manifiestos");
@@ -19,15 +18,13 @@ export default function Manifiesto() {
     }
   };
 
-  // Enviar fila al backend KIAAPI (tabla temporal)
   const agregarAFila = async (fila, index) => {
     try {
       const body = {
         nombre: fila.residuo?.materialType?.name || "—",
         cantidad: fila.residuo?.cantidad?.toString() || "0",
         contenedor: fila.container?.name || "—",
-        peso: "0",   
-        codigo: "0"
+        peso: "0"
       };
 
       const res = await fetch("http://localhost:4002/api/manifiesto-temporal", {
@@ -38,9 +35,7 @@ export default function Manifiesto() {
 
       if (!res.ok) throw new Error("Error al guardar fila.");
 
-      // Al agregar, marcar el checkbox de esa fila
       setCheckedRows(prev => ({ ...prev, [index]: true }));
-
     } catch (error) {
       console.error("Error al enviar fila:", error);
       alert("No se pudo agregar la fila al manifiesto.");
@@ -61,9 +56,8 @@ export default function Manifiesto() {
       const url = URL.createObjectURL(blob);
       setPreviewUrl(url);
 
-      // 🔧 Aquí es donde reseteamos los checkboxes:
       setCheckedRows({});
-      
+      crearManifiesto();
     } catch (err) {
       console.error("Error al exportar manifiesto:", err);
       alert("No se pudo generar el manifiesto.");
@@ -82,42 +76,30 @@ export default function Manifiesto() {
     <main className="content manifiesto-container">
       <h1 className="manifiesto-title">Manifiesto de Residuos</h1>
 
-      <button className="manifiesto-btn" onClick={crearManifiesto}>
-        Crear Manifiesto
-      </button>
+      <button className="manifiesto-btn" onClick={crearManifiesto}>Crear Manifiesto</button>
 
       {datosFiltrados.length > 0 && (
         <div className="tabla-scroll-wrapper">
           <table className="tabla-manifiesto">
             <thead>
               <tr>
-                <th></th> {/* columna checkbox */}
+                <th>&nbsp;</th>
                 <th>Nombre del residuo</th>
                 <th>Tipo de contenedor</th>
                 <th>Cantidad generada (Ton)</th>
-                <th>Área o proceso de generación</th>
+                <th>Fecha de emision</th>
                 <th>Acción</th>
               </tr>
             </thead>
             <tbody>
               {datosFiltrados.map((item, index) => (
                 <tr key={index}>
-                  <td>
-                    <input 
-                      type="checkbox" 
-                      checked={checkedRows[index] || false}
-                      readOnly 
-                    />
-                  </td>
+                  <td><input type="checkbox" checked={checkedRows[index] || false} readOnly /></td>
                   <td>{item.residuo?.materialType?.name || "—"}</td>
                   <td>{item.container?.name || "—"}</td>
                   <td>{item.residuo?.cantidad || "—"}</td>
-                  <td>{item.proceso?.nombre || "—"}</td>
-                  <td>
-                    <button onClick={() => agregarAFila(item, index)}>
-                      Agregar
-                    </button>
-                  </td>
+                  <td>{item.residuo?.fecha_generacion?.slice(0, 10) || "—"}</td>
+                  <td><button onClick={() => agregarAFila(item, index)}>Agregar</button></td>
                 </tr>
               ))}
             </tbody>
@@ -125,17 +107,13 @@ export default function Manifiesto() {
         </div>
       )}
 
-      <button className="manifiesto-btn" onClick={generarYMostrarPreview}>
-        Preview
-      </button>
+      <button className="manifiesto-btn" onClick={generarYMostrarPreview}>Preview</button>
 
       {previewUrl && (
         <>
           <h3>Vista previa PDF</h3>
           <object data={previewUrl} type="application/pdf" className="manifiesto-preview">
-            <p>
-              Tu navegador no puede mostrar PDFs. <a href={previewUrl}>Descargar PDF</a>
-            </p>
+            <p>Tu navegador no puede mostrar PDFs. <a href={previewUrl}>Descargar PDF</a></p>
           </object>
           <button onClick={descargarExcel}>Descargar Excel</button>
         </>
