@@ -111,7 +111,7 @@ body {
   font-size: 16px;
   line-height: 1;
   text-align: center;
-  background: white;
+  background: #05141f;
   border: 1px solid #dee2e6;
   border-radius: 50%;
   cursor: pointer;
@@ -130,7 +130,7 @@ body {
   align-items: center;
   justify-content: center;
   background: #05141f;
-  color: white;
+  color: grey;
   font-weight: 500;
   border-radius: 50%;
   transition: all 0.2s ease;
