@@ -5,7 +5,8 @@ const { Manifiesto, Residuo, Empleado, Proveedor, Manejo, Proceso, Container, El
 // 📝 Crear manifiesto
 exports.crearManifiesto = async (req, res) => {
   const {
-    id_residuo,
+    id_material_type,
+    cantidad,
     id_empleado,
     id_proveedor_destino,
     id_proveedor_transporte,
@@ -16,8 +17,9 @@ exports.crearManifiesto = async (req, res) => {
   } = req.body;
 
   try {
+    // Validate foreign keys
     const [
-      residuo,
+      materialType,
       empleado,
       proveedorDestino,
       proveedorTransporte,
@@ -25,7 +27,7 @@ exports.crearManifiesto = async (req, res) => {
       proceso,
       contenedor
     ] = await Promise.all([
-      db.Residuo.findByPk(id_residuo),
+      db.Material_type.findByPk(id_material_type),
       db.Empleado.findByPk(id_empleado),
       db.Proveedor.findByPk(id_proveedor_destino),
       db.Proveedor.findByPk(id_proveedor_transporte),
@@ -34,12 +36,23 @@ exports.crearManifiesto = async (req, res) => {
       db.Container.findByPk(id_container_type)
     ]);
 
-    if (!residuo || !empleado || !proveedorDestino || !proveedorTransporte || !manejo || !proceso || !contenedor) {
+    if (!materialType || !empleado || !proveedorDestino || !proveedorTransporte || !manejo || !proceso || !contenedor) {
       return res.status(400).json({ error: 'Uno o más datos son inválidos' });
     }
 
+    // Create the new Residuo
+    const nuevoResiduo = await db.Residuo.create({
+      id_material_type,
+      cantidad,
+      fecha_generacion: new Date()
+    });
+
+    const elementosLigados = await materialType.getElementos(); 
+    await nuevoResiduo.setElementos(elementosLigados.map(e => e.id_elemento));
+
+    // Create the Manifiesto using the new Residuo
     const nuevoManifiesto = await db.Manifiesto.create({
-      id_residuo,
+      id_residuo: nuevoResiduo.id_residuo,
       id_empleado,
       id_proveedor_destino,
       id_proveedor_transporte,
@@ -49,17 +62,24 @@ exports.crearManifiesto = async (req, res) => {
       fecha_emision: fecha_emision || null
     });
 
+    // Return with full associations
     const manifiestoCompleto = await db.Manifiesto.findByPk(nuevoManifiesto.id_manifiesto, {
       include: [
         {
           model: db.Residuo,
           as: 'residuo',
-          attributes: ['nombre_residuo', 'fecha_generacion', 'cantidad'],
+          attributes: ['fecha_generacion', 'cantidad'],
           include: [
+            {
+              model: db.Material_type,
+              as: 'materialType',
+              attributes: ['name']
+            },
             {
               model: db.Elemento,
               as: 'elementos',
-              attributes: ['elemento']
+              attributes: ['elemento'],
+              through: { attributes: [] }
             }
           ]
         },
