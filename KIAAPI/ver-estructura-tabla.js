@@ -21,4 +21,4 @@ async function verEstructuraTabla(schema, table) {
 }
 
 // 👇 Aquí defines el schema y tabla que quieres inspeccionar:
-verEstructuraTabla("kiadb", "manifiesto_temp");
+verEstructuraTabla("kiadb", "manifiesto");
