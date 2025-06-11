@@ -404,19 +404,52 @@ body {
   display: block;
 }
 
+.tabla-scroll {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  /* Opcional, hace que el scroll sea visible en pantallas pequeñas */
+  -webkit-overflow-scrolling: touch;
+}
+
 /* Reporte */
 .tabla-reporte {
   width: 100%;
   border-collapse: collapse;
+  min-width: 900px;
+  max-width: none;
+  margin: 0;
   font-size: 14px;
 }
 
-.tabla-reporte th,
-.tabla-reporte td {
+.tabla-reporte td,
+.tabla-reporte th {
   border: 1px solid #ccc;
   padding: 8px;
-  text-align: left;
+  max-width: 220px;         /* Ajusta el ancho si quieres */
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+  cursor: pointer;
+}
+
+.tabla-reporte td:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.9);
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 6px;
+  z-index: 1000;
+  white-space: pre-line;
+  max-width: 420px;
+  font-size: 13px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.18);
+  pointer-events: none;
 }
 
 .tabla-reporte th {
@@ -926,11 +959,6 @@ body {
   overflow-x: auto;
 }
 
-.tabla-reporte {
-  margin: auto;
-  background-color: white;
-  min-width: 1200px;
-}
 
 .paginacion-reporte {
   margin-top: 20px;
@@ -1256,17 +1284,18 @@ body {
   justify-content: center;
   align-items: center;
   padding: 3rem 0; /* adjust for top/bottom spacing */
-  background: #f8f9fa; /* your site color */
+  background: #ffffff; /* your site color */
 }
 
 .unity-card {
   width: 90vw;
   max-width: 1200px;
   aspect-ratio: 16/9;
-  background: #979ba9; /* Unity background, or leave transparent for actual Unity bg */
+  background: #ffffff; /* Unity background, or leave transparent for actual Unity bg */
   border-radius: 24px;
-  overflow: hidden;
+  overflow: hidden !important;
   box-shadow: 0 8px 40px rgba(0,0,0,0.10);
+  border-radius: 24px;
   position: relative;
 }
 
@@ -1275,4 +1304,9 @@ body {
   height: 100%;
   border: none;
   display: block;
+  overflow: hidden !important;
+}
+
+.unity-card-iframe::-webkit-scrollbar {
+  display: none;
 }

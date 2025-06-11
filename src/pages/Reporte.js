@@ -62,7 +62,7 @@ export default function Reporte() {
           "Tipo de contenedor": item.container?.name || "—",
           "Cantidad generada Ton.": item.residuo?.cantidad || "—",
           "Elementos": item.residuo?.elementos?.map(e => e.elemento).join(', ') || "—",
-          "Área o proceso de generación": item.proceso?.nombre || "—",
+          "Área de generación": item.proceso?.nombre || "—",
           "Fecha de ingreso": item.residuo?.fecha_generacion?.slice(0, 10) || "—",
           "Fecha de salida": item.fecha_emision?.slice(0, 10) || "—",
           "Art. 71 fracción I inciso (e)": item.manejo?.manejo || "—",
@@ -223,25 +223,29 @@ export default function Reporte() {
       );
     }
 
+    const columnasOcultasEnWeb = [
+    ];
     return (
-      <div className="table-container">
-        <table className="data-table">
+      <div className="tabla-scroll">
+        <table className="tabla-reporte">
           <thead>
             <tr>
-              {Object.keys(datos[0] || {}).map((key) => (
+              {Object.keys(datos[0] || {}).map((key) => !columnasOcultasEnWeb.includes(key) && (
                 <th key={key}>{key}</th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {datosPaginados.map((fila, i) => (
-              <tr key={i}>
-                {Object.values(fila).map((valor, j) => (
-                  <td key={j}>{valor}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
+              {datosPaginados.map((fila, i) => (
+                <tr key={i}>
+                  {Object.entries(fila).map(([key, valor], j) =>
+                    !columnasOcultasEnWeb.includes(key) && (
+                      <td key={j} data-tooltip={valor}>{valor}</td>
+                    )
+                  )}
+                </tr>
+              ))}
+            </tbody>
         </table>
         <div className="pagination">
           {Array.from({ length: totalPaginas }, (_, i) => (
