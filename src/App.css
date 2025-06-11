@@ -404,41 +404,73 @@ body {
   display: block;
 }
 
-/* Reporte */
+/* Reporte Table Styles - Original Design */
+.tabla-scroll {
+  overflow-x: auto;
+}
+
 .tabla-reporte {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 20px 0;
-  background: white;
+  margin: auto;
+  background-color: white;
   min-width: 1200px;
+  border-collapse: collapse;
+  font-size: 14px;
 }
 
 .tabla-reporte th,
 .tabla-reporte td {
-  padding: 12px 15px;
+  border: 1px solid #ccc;
+  padding: 8px;
   text-align: left;
-  border: 1px solid #ddd;
 }
 
 .tabla-reporte th {
-  background-color: #f8f9fa;
-  color: #333;
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+/* Keep the existing filter styles */
+.filtros-reporte {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.filtros-reporte .fecha-container,
+.filtros-reporte .area-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.filtros-reporte label {
+  font-size: 0.875rem;
+  color: #4a5568;
   font-weight: 500;
 }
 
-.tabla-reporte tr:nth-child(even) {
-  background-color: #f9f9f9;
+.filtros-reporte input,
+.filtros-reporte select {
+  height: 42px;
+  padding: 0 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: #2d3748;
+  background: white;
+  width: 100%;
 }
 
-.tabla-reporte tr:hover {
-  background-color: #f5f5f5;
-}
-
-.tabla-scroll {
-  overflow-x: auto;
-  margin-bottom: 20px;
-  border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+.filtros-reporte input:focus,
+.filtros-reporte select:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
 }
 
 /* Manifiesto */
@@ -878,79 +910,6 @@ body {
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-/* ========================== */
-/* Reporte Page Styles        */
-/* ========================== */
-
-.filtros-reporte {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.filtros-reporte .fecha-container,
-.filtros-reporte .area-container {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.filtros-reporte label {
-  font-size: 0.875rem;
-  color: #4a5568;
-  font-weight: 500;
-}
-
-.filtros-reporte input,
-.filtros-reporte select {
-  height: 42px;
-  padding: 0 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  font-size: 0.875rem;
-  color: #2d3748;
-  background: white;
-  width: 100%;
-}
-
-.filtros-reporte input:focus,
-.filtros-reporte select:focus {
-  outline: none;
-  border-color: #4299e1;
-  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
-}
-
-.paginacion-reporte {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 4px;
-  flex-wrap: nowrap;
-  white-space: nowrap;
-}
-
-.paginacion-reporte button {
-  width: 24px;
-  height: 24px;
-  font-size: 12px;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-}
-
-.paginacion-reporte .activo {
-  background: #1a73e8;
-  color: #fff;
-  font-weight: bold;
 }
 
 /* ========================== */
