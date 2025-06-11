@@ -11,53 +11,62 @@ export default function Login() {
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
-  event.preventDefault();
+    event.preventDefault();
 
-  try {
-    const response = await axios.post('http://localhost:4002/api/login', {
-      numero_empleado: username,
-      contrasena: password
-    });
+    try {
+      const response = await axios.post('http://localhost:4002/api/login', {
+        numero_empleado: username,
+        contrasena: password
+      });
 
-    const { token } = response.data;
-    localStorage.setItem('token', token);
-    navigate('/dashboard');
-  } catch (err) {
-    const errorMsg = err.response?.data || 'Error al conectar con el servidor';
-    setError(errorMsg);
-  }
-};
+      const { token } = response.data;
+      localStorage.setItem('token', token);
+      navigate('/dashboard');
+    } catch (err) {
+      const errorMsg = err.response?.data || 'Error al conectar con el servidor';
+      setError(errorMsg);
+    }
+  };
 
   return (
-    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#f4f4f4' }}>
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#fff', padding: '10px 20px', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>
-        <h1 style={{ margin: 0 }}>Log In</h1>
-        <img src="/logo.png" alt="Logo" className="logo" style={{ height: '40px' }} />
+    <div className="login-page">
+      <header className="login-header">
+        <img src="/logo.png" alt="KIA logo" className="login-logo" />
       </header>
 
-      <div className="login-wrapper" style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <main className="login-main">
         <div className="login-container">
-          <h2>Iniciar Sesión</h2>
-          <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              placeholder="Numero de empleado"
-              required
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-            <input
-              type="password"
-              placeholder="Contraseña"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <button type="submit">Entrar</button>
-            <p style={{ color: 'red', margin: 0 }}>{error}</p>
+          <h1 className="login-title">Iniciar Sesión</h1>
+          <form onSubmit={handleSubmit} className="login-form">
+            <div className="input-group">
+              <label htmlFor="username" className="input-label">Número de empleado</label>
+              <input
+                id="username"
+                type="text"
+                className="login-input"
+                required
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </div>
+            <div className="input-group">
+              <label htmlFor="password" className="input-label">Contraseña</label>
+              <input
+                id="password"
+                type="password"
+                className="login-input"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            {error && <div className="login-error">{error}</div>}
+            <button type="submit" className="login-button">
+              Entrar
+            </button>
           </form>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

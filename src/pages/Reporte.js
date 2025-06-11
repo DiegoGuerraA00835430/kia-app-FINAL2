@@ -5,6 +5,8 @@ const AREAS = ["Assembly", "HO", "Paint", "PTAR", "Stamping", "Utility", "Vendor
 
 export default function Reporte() {
   const [datos, setDatos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [fechaInicio, setFechaInicio] = useState("");
   const [fechaFin, setFechaFin] = useState("");
   const [areasSeleccionadas, setAreasSeleccionadas] = useState([]);
@@ -17,9 +19,13 @@ export default function Reporte() {
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    fetch("http://localhost:4002/api/manifiestos")
-      .then((res) => res.json())
-      .then((data) => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:4002/api/manifiestos");
+        if (!response.ok) {
+          throw new Error('Error al cargar los datos');
+        }
+        const data = await response.json();
         const formateado = data.map((item) => ({
           "Nombre del residuo": item.residuo?.materialType?.name || "—",
           "Tipo de contenedor": item.container?.name || "—",
@@ -35,10 +41,17 @@ export default function Reporte() {
           "Destino": item.proveedorDestino?.nombre || "—",
           "Autorización destino": item.proveedorDestino?.autorizacion_semarnat || "—",
           "Responsable Técnico": item.empleado?.nombre || "—",
-          
         }));
         setDatos(formateado);
-      });
+        setError(null);
+      } catch (err) {
+        setError('Error al cargar los datos. Por favor, intente más tarde.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const datosFiltrados = datos.filter((fila) => {
@@ -70,46 +83,46 @@ export default function Reporte() {
   const totalPaginas = Math.ceil(datosFiltrados.length / elementosPorPagina);
   const datosPaginados = datosFiltrados.slice((paginaActual - 1) * elementosPorPagina, paginaActual * elementosPorPagina);
 
-  return (
-    <div className="page-container">
-      <h1 style={{ textAlign: "center", marginBottom: "20px" }}>Reporte de Manifiestos</h1>
-
-      <button onClick={() => setMostrarFiltros(!mostrarFiltros)}>Filtros ▾</button>
-
-      {mostrarFiltros && (
-        <div className="filtros-reporte">
-          <label>Fecha inicio: <input type="date" value={fechaInicio} onChange={(e) => setFechaInicio(e.target.value)} /></label>
-          <label>Fecha final: <input type="date" value={fechaFin} onChange={(e) => setFechaFin(e.target.value)} /></label>
-
-          <label>Nombre del residuo:
-            <input
-              type="text"
-              value={buscarResiduo}
-              onChange={(e) => setBuscarResiduo(e.target.value)}
-              placeholder="Buscar residuo..."
-            />
-          </label>
-
-          <label>Orden por cantidad:
-            <select value={ordenCantidad} onChange={(e) => setOrdenCantidad(e.target.value)}>
-              <option value="">--</option>
-              <option value="asc">Ascendente</option>
-              <option value="desc">Descendente</option>
-            </select>
-          </label>
-
-          <label>Orden por fecha:
-            <select value={ordenFecha} onChange={(e) => setOrdenFecha(e.target.value)}>
-              <option value="">--</option>
-              <option value="asc">Más antiguo</option>
-              <option value="desc">Más reciente</option>
-            </select>
-          </label>
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <div className="loading-state">
+          <div className="loading-spinner"></div>
+          <p>Cargando datos...</p>
         </div>
-      )}
+      );
+    }
 
-      <div style={{ overflowX: "auto" }}>
-        <table className="tabla-reporte">
+    if (error) {
+      return (
+        <div className="error-state">
+          <svg className="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12" y2="16" />
+          </svg>
+          <p>{error}</p>
+          <button 
+            className="retry-button"
+            onClick={() => window.location.reload()}
+          >
+            Reintentar
+          </button>
+        </div>
+      );
+    }
+
+    if (datos.length === 0) {
+      return (
+        <div className="empty-state">
+          <p>No hay datos disponibles</p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="table-container">
+        <table className="data-table">
           <thead>
             <tr>
               {Object.keys(datos[0] || {}).map((key) => (
@@ -127,7 +140,124 @@ export default function Reporte() {
             ))}
           </tbody>
         </table>
+        <div className="pagination">
+          {Array.from({ length: totalPaginas }, (_, i) => (
+            <button
+              key={i}
+              className={`pagination-button ${paginaActual === i + 1 ? 'active' : ''}`}
+              onClick={() => setPaginaActual(i + 1)}
+            >
+              {i + 1}
+            </button>
+          ))}
+        </div>
       </div>
-    </div>
+    );
+  };
+
+  return (
+    <main className="content">
+      <div className="page-container">
+        <div className="page-header">
+          <h1 className="page-title">Reporte de Manifiestos</h1>
+          <button 
+            className="filter-button"
+            onClick={() => setMostrarFiltros(!mostrarFiltros)}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="button-icon">
+              <path d="M3 6h18M3 12h18M3 18h18" />
+            </svg>
+            <span>Filtros</span>
+          </button>
+        </div>
+
+        {mostrarFiltros && (
+          <div className="filters-panel">
+            <div className="filters-content">
+              <div className="filters-row">
+                <div className="filter-item">
+                  <label className="filter-label">Fecha inicio</label>
+                  <input 
+                    type="date" 
+                    className="filter-input"
+                    value={fechaInicio} 
+                    onChange={(e) => setFechaInicio(e.target.value)} 
+                    placeholder="dd/mm/yyyy"
+                  />
+                </div>
+
+                <div className="filter-item">
+                  <label className="filter-label">Fecha final</label>
+                  <input 
+                    type="date" 
+                    className="filter-input"
+                    value={fechaFin} 
+                    onChange={(e) => setFechaFin(e.target.value)} 
+                    placeholder="dd/mm/yyyy"
+                  />
+                </div>
+              </div>
+
+              <div className="filter-item full-width">
+                <label className="filter-label">Nombre del residuo</label>
+                <input
+                  type="text"
+                  className="filter-input"
+                  value={buscarResiduo}
+                  onChange={(e) => setBuscarResiduo(e.target.value)}
+                  placeholder="Buscar residuo..."
+                />
+              </div>
+
+              <div className="filters-row">
+                <div className="filter-item">
+                  <label className="filter-label">Orden por cantidad</label>
+                  <select 
+                    className="filter-select"
+                    value={ordenCantidad} 
+                    onChange={(e) => setOrdenCantidad(e.target.value)}
+                  >
+                    <option value="">Sin orden</option>
+                    <option value="asc">Ascendente</option>
+                    <option value="desc">Descendente</option>
+                  </select>
+                </div>
+
+                <div className="filter-item">
+                  <label className="filter-label">Orden por fecha</label>
+                  <select 
+                    className="filter-select"
+                    value={ordenFecha} 
+                    onChange={(e) => setOrdenFecha(e.target.value)}
+                  >
+                    <option value="">Sin orden</option>
+                    <option value="asc">Más antiguo</option>
+                    <option value="desc">Más reciente</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {error ? (
+          <div className="error-state">
+            <svg className="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12" y2="16" />
+            </svg>
+            <p className="error-message">Error al cargar los datos. Por favor, intente más tarde.</p>
+            <button className="retry-button" onClick={() => window.location.reload()}>
+              Reintentar
+            </button>
+          </div>
+        ) : (
+          <div className="table-container">
+            {renderContent()}
+          </div>
+        )}
+      </div>
+    </main>
   );
 }
