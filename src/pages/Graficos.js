@@ -14,8 +14,8 @@ import {
 import "../App.css";
 
 const COLORS = [
-  "#0088FE", "#00C49F", "#FFBB28", "#FF8042",
-  "#9241f5", "#E91E63", "#3F51B5", "#009688",
+  "#05141f", "#1a73e8", "#34a853", "#4285f4",
+  "#185abc", "#1967d2", "#174ea6", "#1a73e8",
 ];
 
 const AREAS = [
@@ -106,123 +106,178 @@ export default function Graficos() {
   };
 
   return (
-    <div className="page-container">
-      <main className="content">
-        <h1>Gráfico: Proporción de residuos por Área</h1>
-
-        <button onClick={() => setMostrarFiltros(!mostrarFiltros)} style={{ marginBottom: "10px" }}>
-          Filtros ▾
-        </button>
+    <main className="content">
+      <div className="page-container">
+        <div className="page-header">
+          <h1 className="page-title">Análisis de Residuos</h1>
+          <button 
+            className="filter-button"
+            onClick={() => setMostrarFiltros(!mostrarFiltros)}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="button-icon">
+              <path d="M3 6h18M3 12h18M3 18h18" />
+            </svg>
+            <span>Filtros</span>
+          </button>
+        </div>
 
         {mostrarFiltros && (
-          <div className="filtros-container">
-            <div className="fecha-container">
-              <label>Fecha inicio</label>
-              <input
-                type="date"
-                value={fechaInicio}
-                onChange={(e) => setFechaInicio(e.target.value)}
-              />
-              <label>Fecha final</label>
-              <input
-                type="date"
-                value={fechaFin}
-                onChange={(e) => setFechaFin(e.target.value)}
-              />
-            </div>
+          <div className="filters-panel">
+            <div className="filters-content">
+              <div className="filters-row">
+                <div className="filter-item">
+                  <label className="filter-label">Fecha inicio</label>
+                  <input
+                    type="date"
+                    className="filter-input"
+                    value={fechaInicio}
+                    onChange={(e) => setFechaInicio(e.target.value)}
+                    placeholder="dd/mm/yyyy"
+                  />
+                </div>
 
-            <div>
-              <label>Área</label><br />
-              <button
-                onClick={() => setMostrarDropdown(!mostrarDropdown)}
-                className="area-dropdown-toggle"
-              >
-                Áreas ▾
-              </button>
-              {mostrarDropdown && (
-                <div className="area-dropdown">
-                  {[{ name: "Seleccionar todo", isAll: true }, ...AREAS.map((name) => ({ name }))].map((item) => (
-                    <label key={item.name}>
+                <div className="filter-item">
+                  <label className="filter-label">Fecha final</label>
+                  <input
+                    type="date"
+                    className="filter-input"
+                    value={fechaFin}
+                    onChange={(e) => setFechaFin(e.target.value)}
+                    placeholder="dd/mm/yyyy"
+                  />
+                </div>
+              </div>
+
+              <div className="filter-item">
+                <label className="filter-label">Áreas</label>
+                <select 
+                  className="filter-select"
+                  onClick={() => setMostrarDropdown(!mostrarDropdown)}
+                >
+                  <option value="">Seleccionar áreas</option>
+                </select>
+                {mostrarDropdown && (
+                  <div className="area-dropdown">
+                    <label className="area-checkbox">
                       <input
                         type="checkbox"
-                        checked={
-                          item.isAll
-                            ? areasSeleccionadas.length === AREAS.length
-                            : areasSeleccionadas.includes(item.name)
-                        }
-                        onChange={() =>
-                          item.isAll ? toggleSeleccionarTodo() : toggleArea(item.name)
-                        }
+                        checked={areasSeleccionadas.length === AREAS.length}
+                        onChange={toggleSeleccionarTodo}
                       />
-                      <span>{item.name}</span>
+                      <span>Seleccionar todo</span>
                     </label>
-                  ))}
-                </div>
-              )}
+                    {AREAS.map((area) => (
+                      <label key={area} className="area-checkbox">
+                        <input
+                          type="checkbox"
+                          checked={areasSeleccionadas.includes(area)}
+                          onChange={() => toggleArea(area)}
+                        />
+                        <span>{area}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}
 
-        <div className="chart-section">
-          <ResponsiveContainer width={400} height={400}>
-            <PieChart>
-              <Pie
-                data={datosPieChart}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={120}
-                isAnimationActive={false}
-              >
-                {datosPieChart.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip formatter={(value) => `${value.toFixed(2)} ton`} />
-            </PieChart>
-          </ResponsiveContainer>
+        <h2 className="chart-title">Proporción de Residuos por Área</h2>
 
-          <div className="pie-legend">
-            <ul>
-              {datosPieChart.map((entry, index) => {
-                const total = datosPieChart.reduce((sum, d) => sum + d.value, 0);
-                const porcentaje = ((entry.value / total) * 100).toFixed(1);
-                return (
-                  <li key={index}>
-                    <span
-                      className="color-dot"
-                      style={{ backgroundColor: COLORS[index % COLORS.length] }}
-                    ></span>
-                    <span>{`${entry.name}: ${entry.value.toFixed(2)} ton (${porcentaje}%)`}</span>
-                  </li>
-                );
-              })}
-            </ul>
+        <div className="charts-container">
+          <div className="chart-section">
+            <div className="chart-content">
+              <ResponsiveContainer width={400} height={400}>
+                <PieChart>
+                  <Pie
+                    data={datosPieChart}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={120}
+                    isAnimationActive={true}
+                  >
+                    {datosPieChart.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    formatter={(value) => `${value.toFixed(2)} ton`}
+                    contentStyle={{
+                      backgroundColor: 'white',
+                      border: 'none',
+                      borderRadius: '6px',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                    }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+
+              <div className="chart-legend">
+                {datosPieChart.map((entry, index) => {
+                  const total = datosPieChart.reduce((sum, d) => sum + d.value, 0);
+                  const porcentaje = ((entry.value / total) * 100).toFixed(1);
+                  return (
+                    <div key={index} className="legend-item">
+                      <span
+                        className="legend-color"
+                        style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                      />
+                      <span className="legend-text">
+                        {entry.name}
+                        <span className="legend-value">
+                          {entry.value.toFixed(2)} ton ({porcentaje}%)
+                        </span>
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          <div className="chart-section">
+            <h2 className="chart-title">Tendencia de Residuos por Área</h2>
+            <div className="chart-content">
+              <ResponsiveContainer width="100%" height={400}>
+                <LineChart data={transformarParaLineChart()}>
+                  <XAxis 
+                    dataKey="fecha"
+                    tick={{ fill: '#05141f' }}
+                    stroke="#dee2e6"
+                  />
+                  <YAxis
+                    tick={{ fill: '#05141f' }}
+                    stroke="#dee2e6"
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: 'white',
+                      border: 'none',
+                      borderRadius: '6px',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                    }}
+                  />
+                  <Legend />
+                  {areasUnicas.map((area, index) => (
+                    <Line
+                      key={area}
+                      type="monotone"
+                      dataKey={area}
+                      stroke={COLORS[index % COLORS.length]}
+                      strokeWidth={2}
+                      dot={{ r: 2 }}
+                      activeDot={{ r: 6 }}
+                    />
+                  ))}
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
-
-        <h2 style={{ marginTop: "40px" }}>Tendencia de residuos por Área</h2>
-        <ResponsiveContainer width="100%" height={400}>
-          <LineChart data={transformarParaLineChart()}>
-            <XAxis dataKey="fecha" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            {areasUnicas.map((area, index) => (
-              <Line
-                key={area}
-                type="monotone"
-                dataKey={area}
-                stroke={COLORS[index % COLORS.length]}
-                strokeWidth={2}
-                dot={{ r: 1.5 }}
-                activeDot={{ r: 4 }}
-              />
-            ))}
-          </LineChart>
-        </ResponsiveContainer>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }
