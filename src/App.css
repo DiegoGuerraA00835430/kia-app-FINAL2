@@ -1111,35 +1111,49 @@ body {
   margin: 0;
 }
 
-/* Filter Button */
-.filter-button {
+/* Header Buttons */
+.header-buttons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.filter-button,
+.export-button {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  height: 40px;
-  padding: 0 1rem;
+  padding: 0.5rem 1rem;
   background: #f8f9fa;
-  border: none;
-  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
   color: #05141f;
   font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.filter-button:hover {
+.filter-button:hover,
+.export-button:hover {
   background: #e9ecef;
 }
 
-/* Filters Panel */
+.button-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Filter Panel */
 .filters-panel {
   background: white;
   border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   padding: 2rem;
   margin-bottom: 2rem;
-  width: 100%;
 }
 
 .filters-content {
-  max-width: 100%;
+  max-width: 800px;
 }
 
 .filters-row {
@@ -1161,23 +1175,20 @@ body {
   display: block;
   margin-bottom: 0.75rem;
   color: #05141f;
-  font-size: 1rem;
-  font-weight: normal;
+  font-size: 0.9rem;
 }
 
 .filter-input,
-.filter-select,
-.area-dropdown-toggle {
+.filter-select {
   width: 100%;
   height: 44px;
-  padding: 0.75rem 1rem;
+  padding: 0 1rem;
   background: white;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid #dee2e6;
   border-radius: 8px;
   font-size: 1rem;
   color: #05141f;
-  transition: all 0.2s ease;
-  box-sizing: border-box;
+  transition: border-color 0.2s ease;
 }
 
 .filter-input:focus,
@@ -1186,157 +1197,58 @@ body {
   border-color: #05141f;
 }
 
-.filter-input::placeholder {
-  color: rgba(0, 0, 0, 0.4);
+.area-dropdown-toggle {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #05141f;
+  cursor: pointer;
+  text-align: left;
 }
 
-/* Header Buttons */
-.header-buttons {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
+.area-dropdown {
+  position: absolute;
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  margin-top: 0.5rem;
+  width: 100%;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 100;
 }
 
-.filter-button,
-.export-button {
+.area-checkbox {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  background: white;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  color: #05141f;
-  font-size: 1rem;
+  padding: 0.5rem;
   cursor: pointer;
-  transition: all 0.2s ease;
 }
 
-.filter-button:hover,
-.export-button:hover {
+.area-checkbox:hover {
   background: #f8f9fa;
 }
 
-.export-button {
-  background: #05141f;
-  color: white;
-  border: none;
+.area-checkbox input {
+  margin: 0;
 }
 
-.export-button:hover {
-  background: #1a1a1a;
+.area-checkbox span {
+  font-size: 0.9rem;
+  color: #05141f;
 }
 
-.button-icon {
-  width: 16px;
-  height: 16px;
-}
-
-/* Filter Actions */
 .filter-actions {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
   margin-top: 2rem;
-}
-
-.btn-primary {
-  padding: 0.75rem 2rem;
-  background: #05141f;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.btn-primary:hover {
-  background: #1a1a1a;
-}
-
-/* Table Styles */
-.users-table-container {
-  overflow-x: auto;
-  border-radius: 8px;
-  border: 1px solid #dee2e6;
-  width: 100%;
-}
-
-.users-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.users-table th,
-.users-table td {
-  padding: 1rem;
-  text-align: left;
-  border-bottom: 1px solid #dee2e6;
-}
-
-.users-table th {
-  background: #f8f9fa;
-  font-weight: 500;
-  color: #05141f;
-}
-
-.users-table tr:last-child td {
-  border-bottom: none;
-}
-
-.role-badge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.role-badge.admin {
-  background: #e3f2fd;
-  color: #1976d2;
-}
-
-.role-badge.auditor {
-  background: #f3e5f5;
-  color: #7b1fa2;
-}
-
-.btn-delete {
-  padding: 0.5rem 1rem;
-  background: #fff;
-  color: #dc3545;
-  border: 1px solid #dc3545;
-  border-radius: 6px;
-  font-size: 0.875rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-delete:hover {
-  background: #dc3545;
-  color: white;
-}
-
-/* Alert Styles */
-.alert {
-  padding: 1rem;
-  border-radius: 8px;
-  margin: 1rem 0;
-  grid-column: 1 / -1;
-}
-
-.alert-error {
-  background: #fff3f3;
-  color: #dc3545;
-  border: 1px solid #ffcdd2;
-}
-
-.alert-success {
-  background: #f1f8e9;
-  color: #2e7d32;
-  border: 1px solid #c8e6c9;
 }
 
 .unity-card-wrapper {
