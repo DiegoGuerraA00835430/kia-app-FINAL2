@@ -34,7 +34,6 @@ export default function Manifiesto() {
       });
 
       if (!res.ok) throw new Error("Error al guardar fila.");
-
       setCheckedRows(prev => ({ ...prev, [index]: true }));
     } catch (error) {
       console.error("Error al enviar fila:", error);
@@ -64,30 +63,27 @@ export default function Manifiesto() {
     }
   };
 
-  const descargarExcel = () => {
-    const a = document.createElement("a");
-    a.href = "http://localhost:8000/generar-manifiesto";
-    a.download = "Manifiesto KMX-AA-XX SAI.xlsx";
-    a.click();
-    a.remove();
-  };
-
   return (
-    <main className="content manifiesto-container">
-      <h1 className="manifiesto-title">Manifiesto de Residuos</h1>
+    <div className="page-container">
+      <div className="page-header">
+        <h1 className="page-title">Manifiesto de Residuos</h1>
+      </div>
 
-      <button className="manifiesto-btn" onClick={crearManifiesto}>Crear Manifiesto</button>
+      <div className="manifiesto-actions">
+        <button className="action-button primary" onClick={crearManifiesto}>Crear Manifiesto</button>
+        <button className="action-button primary" onClick={generarYMostrarPreview}>Exportar</button>
+      </div>
 
       {datosFiltrados.length > 0 && (
-        <div className="tabla-scroll-wrapper">
-          <table className="tabla-manifiesto">
+        <div className="table-container">
+          <table className="data-table">
             <thead>
               <tr>
-                <th>&nbsp;</th>
+                <th></th>
                 <th>Nombre del residuo</th>
                 <th>Tipo de contenedor</th>
                 <th>Cantidad generada (Ton)</th>
-                <th>Fecha de emision</th>
+                <th>Fecha de emisión</th>
                 <th>Acción</th>
               </tr>
             </thead>
@@ -99,7 +95,9 @@ export default function Manifiesto() {
                   <td>{item.container?.name || "—"}</td>
                   <td>{item.residuo?.cantidad || "—"}</td>
                   <td>{item.residuo?.fecha_generacion?.slice(0, 10) || "—"}</td>
-                  <td><button onClick={() => agregarAFila(item, index)}>Agregar</button></td>
+                  <td>
+                    <button className="action-button secondary" onClick={() => agregarAFila(item, index)}>Agregar</button>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -107,17 +105,16 @@ export default function Manifiesto() {
         </div>
       )}
 
-      <button className="manifiesto-btn" onClick={generarYMostrarPreview}>Preview</button>
-
       {previewUrl && (
-        <>
-          <h3>Vista previa PDF</h3>
-          <object data={previewUrl} type="application/pdf" className="manifiesto-preview">
-            <p>Tu navegador no puede mostrar PDFs. <a href={previewUrl}>Descargar PDF</a></p>
-          </object>
-          
-        </>
+        <div className="preview-container" style={{ marginTop: "2rem" }}>
+          <h3 className="preview-title">Vista previa PDF</h3>
+          <div className="pdf-container">
+            <object data={previewUrl} type="application/pdf" className="pdf-preview">
+              <p>Tu navegador no puede mostrar PDFs. <a href={previewUrl}>Descargar PDF</a></p>
+            </object>
+          </div>
+        </div>
       )}
-    </main>
+    </div>
   );
 }
