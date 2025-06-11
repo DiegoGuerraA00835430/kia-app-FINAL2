@@ -6,6 +6,7 @@ async function verDatosTabla(schema, table) {
   try {
     const [results] = await sequelize.query(query);
     console.log(`📦 Datos de la tabla '${schema}.${table}':`);
+    console.log(results);  // <-- agregar este log temporal
     console.table(results);
   } catch (err) {
     console.error("❌ Error al obtener datos:", err);
@@ -14,4 +15,4 @@ async function verDatosTabla(schema, table) {
   }
 }
 
-verDatosTabla("kiadb", "container_type");
+verDatosTabla("kiadb", "manifiesto_temp");
