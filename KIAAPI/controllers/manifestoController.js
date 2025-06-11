@@ -1,5 +1,4 @@
 const db = require('../models');
-
 const { Manifiesto, Residuo, Empleado, Proveedor, Manejo, Proceso, Container, Elemento, Material_type } = db;
 
 // 📝 Crear manifiesto
@@ -17,7 +16,6 @@ exports.crearManifiesto = async (req, res) => {
   } = req.body;
 
   try {
-    // Validate foreign keys
     const [
       materialType,
       empleado,
@@ -40,7 +38,6 @@ exports.crearManifiesto = async (req, res) => {
       return res.status(400).json({ error: 'Uno o más datos son inválidos' });
     }
 
-    // Create the new Residuo
     const nuevoResiduo = await db.Residuo.create({
       id_material_type,
       cantidad,
@@ -50,7 +47,6 @@ exports.crearManifiesto = async (req, res) => {
     const elementosLigados = await materialType.getElementos(); 
     await nuevoResiduo.setElementos(elementosLigados.map(e => e.id_elemento));
 
-    // Create the Manifiesto using the new Residuo
     const nuevoManifiesto = await db.Manifiesto.create({
       id_residuo: nuevoResiduo.id_residuo,
       id_empleado,
@@ -62,57 +58,19 @@ exports.crearManifiesto = async (req, res) => {
       fecha_emision: fecha_emision || null
     });
 
-    // Return with full associations
     const manifiestoCompleto = await db.Manifiesto.findByPk(nuevoManifiesto.id_manifiesto, {
       include: [
-        {
-          model: db.Residuo,
-          as: 'residuo',
-          attributes: ['fecha_generacion', 'cantidad'],
-          include: [
-            {
-              model: db.Material_type,
-              as: 'materialType',
-              attributes: ['name']
-            },
-            {
-              model: db.Elemento,
-              as: 'elementos',
-              attributes: ['elemento'],
-              through: { attributes: [] }
-            }
-          ]
+        { model: db.Residuo, as: 'residuo', attributes: ['fecha_generacion', 'cantidad'], include: [
+            { model: db.Material_type, as: 'materialType', attributes: ['name'] },
+            { model: db.Elemento, as: 'elementos', attributes: ['elemento'], through: { attributes: [] } }
+          ] 
         },
-        {
-          model: db.Empleado,
-          as: 'empleado',
-          attributes: ['nombre']
-        },
-        {
-          model: db.Proveedor,
-          as: 'proveedorDestino',
-          attributes: ['nombre', 'autorizacion_semarnat']
-        },
-        {
-          model: db.Proveedor,
-          as: 'proveedorTransporte',
-          attributes: ['nombre', 'autorizacion_semarnat', 'autorizacion_sct']
-        },
-        {
-          model: db.Manejo,
-          as: 'manejo',
-          attributes: ['manejo']
-        },
-        {
-          model: db.Proceso,
-          as: 'proceso',
-          attributes: ['nombre']
-        },
-        {
-          model: db.Container,
-          as: 'container',
-          attributes: ['name']
-        }
+        { model: db.Empleado, as: 'empleado', attributes: ['nombre'] },
+        { model: db.Proveedor, as: 'proveedorDestino', attributes: ['nombre', 'autorizacion_semarnat'] },
+        { model: db.Proveedor, as: 'proveedorTransporte', attributes: ['nombre', 'autorizacion_semarnat', 'autorizacion_sct'] },
+        { model: db.Manejo, as: 'manejo', attributes: ['manejo'] },
+        { model: db.Proceso, as: 'proceso', attributes: ['nombre'] },
+        { model: db.Container, as: 'container', attributes: ['name'] }
       ]
     });
 
@@ -147,6 +105,7 @@ exports.cambiarResiduoManifiesto = async (req, res) => {
   }
 };
 
+// 🔎 Obtener manifiestos (sin filtros, frontend filtrará)
 exports.obtenerManifiestos = async (req, res) => {
   try {
     const manifiestos = await Manifiesto.findAll({
@@ -156,49 +115,16 @@ exports.obtenerManifiestos = async (req, res) => {
           as: 'residuo',
           attributes: ['cantidad', 'fecha_generacion'],
           include: [
-            {
-              model: Material_type,
-              as: 'materialType',
-              attributes: ['name']
-            },
-            {
-              model: Elemento,
-              as: 'elementos',
-              attributes: ['elemento'],
-              through: { attributes: [] } // Oculta residuo_elemento
-            }
+            { model: Material_type, as: 'materialType', attributes: ['name'] },
+            { model: Elemento, as: 'elementos', attributes: ['elemento'], through: { attributes: [] } }
           ]
         },
-        {
-          model: Empleado,
-          as: 'empleado',
-          attributes: ['nombre']
-        },
-        {
-          model: Proveedor,
-          as: 'proveedorDestino',
-          attributes: ['nombre', 'autorizacion_semarnat']
-        },
-        {
-          model: Proveedor,
-          as: 'proveedorTransporte',
-          attributes: ['nombre', 'autorizacion_semarnat', 'autorizacion_sct']
-        },
-        {
-          model: Manejo,
-          as: 'manejo',
-          attributes: ['manejo']
-        },
-        {
-          model: Proceso,
-          as: 'proceso',
-          attributes: ['nombre']
-        },
-        {
-          model: Container,
-          as: 'container',
-          attributes: ['name']
-        }
+        { model: Empleado, as: 'empleado', attributes: ['nombre'] },
+        { model: Proveedor, as: 'proveedorDestino', attributes: ['nombre', 'autorizacion_semarnat'] },
+        { model: Proveedor, as: 'proveedorTransporte', attributes: ['nombre', 'autorizacion_semarnat', 'autorizacion_sct'] },
+        { model: Manejo, as: 'manejo', attributes: ['manejo'] },
+        { model: Proceso, as: 'proceso', attributes: ['nombre'] },
+        { model: Container, as: 'container', attributes: ['name'] }
       ]
     });
 
@@ -209,17 +135,25 @@ exports.obtenerManifiestos = async (req, res) => {
   }
 };
 
+// ✅ Actualizar fecha_emision de varios manifiestos al exportar
+exports.marcarSalida = async (req, res) => {
+  const { ids } = req.body;
 
-
-exports.guardarFilaParaManifiesto = async (req, res) => {
-  const { nombre, cantidad, contenedor, peso, codigo } = req.body;
+  if (!Array.isArray(ids) || ids.length === 0) {
+    return res.status(400).json({ error: 'Debe enviar una lista de IDs' });
+  }
 
   try {
-    // Aquí puedes usar Sequelize o SQL puro para guardar en una tabla temporal
-    await db.ManifiestoTemp.create({ nombre, cantidad, contenedor, peso, codigo });
-    res.status(201).json({ mensaje: "Fila guardada en la base de datos temporal" });
+    const fechaActual = new Date();
+
+    await db.Manifiesto.update(
+      { fecha_emision: fechaActual },
+      { where: { id_manifiesto: ids } }
+    );
+
+    res.json({ mensaje: 'Manifiestos actualizados correctamente' });
   } catch (error) {
-    console.error("❌ Error:", error);
-    res.status(500).json({ error: "No se pudo guardar la fila" });
+    console.error('❌ Error al actualizar fecha de emisión:', error);
+    res.status(500).json({ error: 'Error al actualizar los manifiestos' });
   }
 };

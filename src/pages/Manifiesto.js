@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../App.css";
 
 export default function Manifiesto() {
@@ -10,6 +10,8 @@ export default function Manifiesto() {
     try {
       const resp = await fetch("http://localhost:4002/api/manifiestos");
       const data = await resp.json();
+
+      // ✅ Filtro restaurado en el frontend
       const filtrados = data.filter(item => item.fecha_emision === null);
       setDatosFiltrados(filtrados);
     } catch (err) {
@@ -17,6 +19,10 @@ export default function Manifiesto() {
       alert("No se pudieron cargar los residuos.");
     }
   };
+
+  useEffect(() => {
+    crearManifiesto();
+  }, []);
 
   const agregarAFila = async (fila, index) => {
     try {
@@ -55,8 +61,16 @@ export default function Manifiesto() {
       const url = URL.createObjectURL(blob);
       setPreviewUrl(url);
 
+      // ✅ AHORA ACTUALIZAMOS FECHA_EMISION EN LA BD
+      const idsActualizar = datosFiltrados.map(item => item.id_manifiesto);
+      await fetch("http://localhost:4002/api/manifiestos/marcarSalida", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: idsActualizar })
+      });
+
       setCheckedRows({});
-      crearManifiesto();
+      crearManifiesto(); // 🔄 Recargamos la tabla actualizada
     } catch (err) {
       console.error("Error al exportar manifiesto:", err);
       alert("No se pudo generar el manifiesto.");
@@ -94,7 +108,7 @@ export default function Manifiesto() {
                   <td>{item.residuo?.materialType?.name || "—"}</td>
                   <td>{item.container?.name || "—"}</td>
                   <td>{item.residuo?.cantidad || "—"}</td>
-                  <td>{item.residuo?.fecha_generacion?.slice(0, 10) || "—"}</td>
+                  <td>{item.fecha_emision ? item.fecha_emision.slice(0, 10) : "—"}</td>
                   <td>
                     <button className="action-button secondary" onClick={() => agregarAFila(item, index)}>Agregar</button>
                   </td>

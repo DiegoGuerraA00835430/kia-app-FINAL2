@@ -1,12 +1,12 @@
 const { sequelize } = require("./models");
 
-async function verDatosTabla(schema, table) {
-  const query = `SELECT * FROM "${schema}"."${table}" LIMIT 100`;
+async function verDatosTablaFiltrado(schema, table) {
+  const query = `SELECT * FROM "${schema}"."${table}" WHERE fecha_emision IS NULL LIMIT 100`;
 
   try {
     const [results] = await sequelize.query(query);
-    console.log(`📦 Datos de la tabla '${schema}.${table}':`);
-    console.log(results);  // <-- agregar este log temporal
+    console.log(`📦 Datos de la tabla '${schema}.${table}' (fecha_emision IS NULL):`);
+    console.log(results);
     console.table(results);
   } catch (err) {
     console.error("❌ Error al obtener datos:", err);
@@ -15,4 +15,4 @@ async function verDatosTabla(schema, table) {
   }
 }
 
-verDatosTabla("kiadb", "manifiesto_temp");
+verDatosTablaFiltrado("kiadb", "manifiesto");
