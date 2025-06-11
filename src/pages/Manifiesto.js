@@ -11,7 +11,6 @@ export default function Manifiesto() {
       const resp = await fetch("http://localhost:4002/api/manifiestos");
       const data = await resp.json();
 
-      // ✅ Filtro restaurado en el frontend
       const filtrados = data.filter(item => item.fecha_emision === null);
       setDatosFiltrados(filtrados);
     } catch (err) {
@@ -61,7 +60,6 @@ export default function Manifiesto() {
       const url = URL.createObjectURL(blob);
       setPreviewUrl(url);
 
-      // ✅ AHORA ACTUALIZAMOS FECHA_EMISION EN LA BD
       const idsActualizar = datosFiltrados.map(item => item.id_manifiesto);
       await fetch("http://localhost:4002/api/manifiestos/marcarSalida", {
         method: "PUT",
@@ -70,7 +68,7 @@ export default function Manifiesto() {
       });
 
       setCheckedRows({});
-      crearManifiesto(); // 🔄 Recargamos la tabla actualizada
+      crearManifiesto();
     } catch (err) {
       console.error("Error al exportar manifiesto:", err);
       alert("No se pudo generar el manifiesto.");
@@ -89,8 +87,8 @@ export default function Manifiesto() {
       </div>
 
       {datosFiltrados.length > 0 && (
-        <div className="table-container">
-          <table className="data-table">
+        <div className="table-container" style={{ overflowX: "auto" }}>
+          <table className="data-table" style={{ minWidth: "100px" }}>
             <thead>
               <tr>
                 <th></th>
@@ -98,14 +96,16 @@ export default function Manifiesto() {
                 <th>Tipo de contenedor</th>
                 <th>Cantidad generada (Ton)</th>
                 <th>Fecha de emisión</th>
-                <th>Acción</th>
+                <th style={{ width: "150px" }}>Acción</th>
               </tr>
             </thead>
             <tbody>
               {datosFiltrados.map((item, index) => (
                 <tr key={index}>
                   <td><input type="checkbox" checked={checkedRows[index] || false} readOnly /></td>
-                  <td>{item.residuo?.materialType?.name || "—"}</td>
+                  <td style={{ maxWidth: "400px", whiteSpace: "pre-line", wordBreak: "break-word" }}>
+                    {item.residuo?.materialType?.name || "—"}
+                  </td>
                   <td>{item.container?.name || "—"}</td>
                   <td>{item.residuo?.cantidad || "—"}</td>
                   <td>{item.fecha_emision ? item.fecha_emision.slice(0, 10) : "—"}</td>
