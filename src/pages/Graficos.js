@@ -127,19 +127,19 @@ export default function Graficos() {
 
   return (
     <main className="content">
-      <div className="page-container">
+    <div className="page-container">
         <div className="page-header">
           <h1 className="page-title">Gráficos de Residuos</h1>
           <div className="header-buttons">
-            <button 
-              className="filter-button"
-              onClick={() => setMostrarFiltros(!mostrarFiltros)}
-            >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="button-icon">
-                <path d="M3 6h18M3 12h18M3 18h18" />
-              </svg>
-              <span>Filtros</span>
-            </button>
+          <button 
+            className="filter-button"
+            onClick={() => setMostrarFiltros(!mostrarFiltros)}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="button-icon">
+              <path d="M3 6h18M3 12h18M3 18h18" />
+            </svg>
+            <span>Filtros</span>
+        </button>
           </div>
         </div>
 
@@ -149,26 +149,26 @@ export default function Graficos() {
               <div className="filters-row">
                 <div className="filter-item">
                   <label className="filter-label">Fecha inicio</label>
-                  <input
-                    type="date"
+              <input
+                type="date"
                     className="filter-input"
-                    value={fechaInicio}
-                    onChange={(e) => setFechaInicio(e.target.value)}
+                value={fechaInicio}
+                onChange={(e) => setFechaInicio(e.target.value)}
                     placeholder="dd/mm/yyyy"
-                  />
+              />
                 </div>
 
                 <div className="filter-item">
                   <label className="filter-label">Fecha final</label>
-                  <input
-                    type="date"
+              <input
+                type="date"
                     className="filter-input"
-                    value={fechaFin}
-                    onChange={(e) => setFechaFin(e.target.value)}
+                value={fechaFin}
+                onChange={(e) => setFechaFin(e.target.value)}
                     placeholder="dd/mm/yyyy"
-                  />
+              />
                 </div>
-              </div>
+            </div>
 
               <div className="filter-item">
                 <label className="filter-label">Áreas</label>
@@ -182,19 +182,19 @@ export default function Graficos() {
                     : "Seleccionar áreas"}
                 </div>
                 {showAreaDropdown && (
-                  <div className="area-dropdown">
+                <div className="area-dropdown">
                     {areas.map(area => (
                       <label key={area} className="area-checkbox">
                         <input
                           type="checkbox"
                           checked={areasSeleccionadas.includes(area)}
                           onChange={() => toggleArea(area)}
-                        />
+                      />
                         <span>{area}</span>
-                      </label>
-                    ))}
-                  </div>
-                )}
+                    </label>
+                  ))}
+                </div>
+              )}
               </div>
 
               <div className="filter-actions">
