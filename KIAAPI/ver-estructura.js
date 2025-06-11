@@ -1,24 +1,23 @@
 const { sequelize } = require("./models");
 
-async function verEstructuraTabla(schema, table) {
+async function verTodasLasTablas(schema) {
   const query = `
-    SELECT column_name, data_type
-    FROM information_schema.columns
-    WHERE table_schema = $1 AND table_name = $2
+    SELECT table_name
+    FROM information_schema.tables
+    WHERE table_schema = $1
   `;
 
   try {
     const [result] = await sequelize.query(query, {
-      bind: [schema, table]
+      bind: [schema]
     });
-    console.log(`📄 Columnas de la tabla '${schema}.${table}':`);
+    console.log(`📄 Tablas en el esquema '${schema}':`);
     console.table(result);
   } catch (error) {
-    console.error("❌ Error al obtener estructura:", error);
+    console.error("❌ Error al obtener las tablas:", error);
   } finally {
     await sequelize.close();
   }
 }
 
-verEstructuraTabla("kiadb", "container_type");  // ✅ aquí defines esquema y tabla
-
+verTodasLasTablas("kiadb, manifiesto_temp");

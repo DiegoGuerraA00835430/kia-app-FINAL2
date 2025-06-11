@@ -4,6 +4,7 @@ import "../App.css";
 export default function Manifiesto() {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [datosFiltrados, setDatosFiltrados] = useState([]);
+  const [checkedRows, setCheckedRows] = useState({});  // << Nuevo estado para checkboxes
 
   // Obtener datos con fecha_emision null desde KIAAPI
   const crearManifiesto = async () => {
@@ -19,14 +20,14 @@ export default function Manifiesto() {
   };
 
   // Enviar fila al backend KIAAPI (tabla temporal)
-  const agregarAFila = async (fila) => {
+  const agregarAFila = async (fila, index) => {
     try {
       const body = {
         nombre: fila.residuo?.materialType?.name || "—",
         cantidad: fila.residuo?.cantidad?.toString() || "0",
         contenedor: fila.container?.name || "—",
-        peso: "0",   // puedes ajustarlo si tienes el dato real
-        codigo: "0"  // puedes ajustarlo si tienes el dato real
+        peso: "0",   
+        codigo: "0"
       };
 
       const res = await fetch("http://localhost:4002/api/manifiesto-temporal", {
@@ -36,38 +37,39 @@ export default function Manifiesto() {
       });
 
       if (!res.ok) throw new Error("Error al guardar fila.");
-      
+
+      // Al agregar, marcar el checkbox de esa fila
+      setCheckedRows(prev => ({ ...prev, [index]: true }));
+
     } catch (error) {
       console.error("Error al enviar fila:", error);
       alert("No se pudo agregar la fila al manifiesto.");
     }
   };
 
-  // Vista previa (usa FastAPI para PDF)
-const generarYMostrarPreview = async () => {
-  try {
-    // Paso 1: Generar el archivo Excel en el backend FastAPI
-    const excelResp = await fetch("http://localhost:8000/generar-manifiesto");
-    if (!excelResp.ok) throw new Error("Error al generar el manifiesto.");
+  const generarYMostrarPreview = async () => {
+    try {
+      const excelResp = await fetch("http://localhost:8000/generar-manifiesto");
+      if (!excelResp.ok) throw new Error("Error al generar el manifiesto.");
 
-    // Paso 2: Esperar 1 segundo para asegurar que el archivo fue guardado
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    // Paso 3: Generar el PDF desde el Excel recién creado
-    const pdfResp = await fetch("http://localhost:8000/preview-manifiesto");
-    if (!pdfResp.ok) throw new Error("Error al generar el PDF.");
+      const pdfResp = await fetch("http://localhost:8000/preview-manifiesto");
+      if (!pdfResp.ok) throw new Error("Error al generar el PDF.");
 
-    // Paso 4: Mostrar la vista previa del PDF
-    const blob = await pdfResp.blob();
-    const url = URL.createObjectURL(blob);
-    setPreviewUrl(url);
-  } catch (err) {
-    console.error("Error al exportar manifiesto:", err);
-    alert("No se pudo generar el manifiesto.");
-  }
-};
+      const blob = await pdfResp.blob();
+      const url = URL.createObjectURL(blob);
+      setPreviewUrl(url);
 
-  // Descargar Excel directamente
+      // 🔧 Aquí es donde reseteamos los checkboxes:
+      setCheckedRows({});
+      
+    } catch (err) {
+      console.error("Error al exportar manifiesto:", err);
+      alert("No se pudo generar el manifiesto.");
+    }
+  };
+
   const descargarExcel = () => {
     const a = document.createElement("a");
     a.href = "http://localhost:8000/generar-manifiesto";
@@ -89,6 +91,7 @@ const generarYMostrarPreview = async () => {
           <table className="tabla-manifiesto">
             <thead>
               <tr>
+                <th></th> {/* columna checkbox */}
                 <th>Nombre del residuo</th>
                 <th>Tipo de contenedor</th>
                 <th>Cantidad generada (Ton)</th>
@@ -99,12 +102,19 @@ const generarYMostrarPreview = async () => {
             <tbody>
               {datosFiltrados.map((item, index) => (
                 <tr key={index}>
+                  <td>
+                    <input 
+                      type="checkbox" 
+                      checked={checkedRows[index] || false}
+                      readOnly 
+                    />
+                  </td>
                   <td>{item.residuo?.materialType?.name || "—"}</td>
                   <td>{item.container?.name || "—"}</td>
                   <td>{item.residuo?.cantidad || "—"}</td>
                   <td>{item.proceso?.nombre || "—"}</td>
                   <td>
-                    <button onClick={() => agregarAFila(item)}>
+                    <button onClick={() => agregarAFila(item, index)}>
                       Agregar
                     </button>
                   </td>
