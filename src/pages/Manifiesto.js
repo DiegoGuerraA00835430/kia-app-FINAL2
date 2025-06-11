@@ -65,9 +65,9 @@ export default function Manifiesto() {
                   </>
                 )}
               </div>
-            </button>
+      </button>
 
-            {previewUrl && (
+      {previewUrl && (
               <button 
                 className="action-button secondary"
                 onClick={descargarExcel}
@@ -98,11 +98,11 @@ export default function Manifiesto() {
             <div className="preview-container">
               <h2 className="preview-title">Vista Previa del Manifiesto</h2>
               <div className="pdf-container">
-                <object
-                  data={previewUrl}
-                  type="application/pdf"
+          <object
+            data={previewUrl}
+            type="application/pdf"
                   className="pdf-preview"
-                >
+          >
                   <div className="pdf-fallback">
                     <p>Tu navegador no puede mostrar PDFs.</p>
                     <a 
@@ -113,10 +113,10 @@ export default function Manifiesto() {
                       Descargar PDF
                     </a>
                   </div>
-                </object>
+          </object>
               </div>
             </div>
-          )}
+      )}
         </div>
       </div>
     </main>

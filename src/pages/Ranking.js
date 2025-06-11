@@ -29,14 +29,14 @@ export default function Ranking() {
           throw new Error('Error al cargar los datos');
         }
         const data = await response.json();
-        const formateado = data.map((item) => ({
-          "Nombre del residuo": item.residuo?.materialType?.name || "—",
-          "Tipo de contenedor": item.container?.name || "—",
-          "Cantidad generada Ton.": item.residuo?.cantidad || "0",
-          "Area o proceso de generacion": item.proceso?.nombre || "—",
-          "Fecha de ingreso": item.residuo?.fecha_generacion?.slice(0, 10) || "—",
-        }));
-        setDatos(formateado);
+      const formateado = data.map((item) => ({
+        "Nombre del residuo": item.residuo?.materialType?.name || "—",
+        "Tipo de contenedor": item.container?.name || "—",
+        "Cantidad generada Ton.": item.residuo?.cantidad || "0",
+        "Area o proceso de generacion": item.proceso?.nombre || "—",
+        "Fecha de ingreso": item.residuo?.fecha_generacion?.slice(0, 10) || "—",
+      }));
+      setDatos(formateado);
         setError(null);
       } catch (err) {
         setError('Error al cargar los datos. Por favor, intente más tarde.');
@@ -46,7 +46,7 @@ export default function Ranking() {
     };
 
     fetchData();
-  }, []);
+}, []);
 
   const filteredData = data.filter(item => {
     const fecha = item["Fecha de ingreso"];
@@ -94,7 +94,7 @@ export default function Ranking() {
 
   const renderContent = () => {
     if (loading) {
-      return (
+  return (
         <div className="loading-state">
           <div className="loading-spinner"></div>
           <p>Cargando datos...</p>
@@ -125,18 +125,18 @@ export default function Ranking() {
       return (
         <div className="empty-state">
           <p>No hay datos disponibles para este mes.</p>
-        </div>
+          </div>
       );
     }
 
     return (
-      <div className="ranking-list">
+          <div className="ranking-list">
         {rankings.map(([area, total], index) => (
           <div key={index} className="ranking-card">
-            <div
+                  <div
               className={`ranking-header ${expandedIndex === index ? 'expanded' : ''}`}
-              onClick={() => toggleDetails(index)}
-            >
+                    onClick={() => toggleDetails(index)}
+                  >
               <div className="ranking-info">
                 <h3 className="ranking-area">{area}</h3>
                 <span className="ranking-total">{total.toFixed(2)} ton</span>
@@ -150,8 +150,8 @@ export default function Ranking() {
               >
                 <path d="M6 9l6 6 6-6" />
               </svg>
-            </div>
-            {expandedIndex === index && (
+                  </div>
+                  {expandedIndex === index && (
               <div className="ranking-details">
                 <div className="details-header">
                   <h4>Desglose de Residuos</h4>
@@ -159,19 +159,19 @@ export default function Ranking() {
                 </div>
                 <div className="chart-container">
                   <ResponsiveContainer width="100%" height={400}>
-                    <PieChart>
-                      <Pie
-                        data={getResiduoDataByArea(area)}
-                        dataKey="value"
-                        nameKey="name"
+                        <PieChart>
+                          <Pie
+                            data={getResiduoDataByArea(area)}
+                            dataKey="value"
+                            nameKey="name"
                         cx="50%"
-                        cy="50%"
+                            cy="50%"
                         outerRadius={150}
-                      >
-                        {getResiduoDataByArea(area).map((entry, i) => (
-                          <Cell key={`cell-${i}`} fill={COLORS[i % COLORS.length]} />
-                        ))}
-                      </Pie>
+                          >
+                            {getResiduoDataByArea(area).map((entry, i) => (
+                              <Cell key={`cell-${i}`} fill={COLORS[i % COLORS.length]} />
+                            ))}
+                          </Pie>
                       <Tooltip 
                         contentStyle={{
                           backgroundColor: 'white',
@@ -188,8 +188,8 @@ export default function Ranking() {
                           paddingLeft: '20px',
                         }}
                       />
-                    </PieChart>
-                  </ResponsiveContainer>
+                        </PieChart>
+                      </ResponsiveContainer>
                 </div>
               </div>
             )}
@@ -230,7 +230,7 @@ export default function Ranking() {
         </div>
 
         {renderContent()}
-      </div>
-    </main>
+        </div>
+      </main>
   );
 }

@@ -11,22 +11,22 @@ export default function Login() {
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+  event.preventDefault();
 
-    try {
-      const response = await axios.post('http://localhost:4002/api/login', {
-        numero_empleado: username,
-        contrasena: password
-      });
+  try {
+    const response = await axios.post('http://localhost:4002/api/login', {
+      numero_empleado: username,
+      contrasena: password
+    });
 
-      const { token } = response.data;
-      localStorage.setItem('token', token);
-      navigate('/dashboard');
-    } catch (err) {
-      const errorMsg = err.response?.data || 'Error al conectar con el servidor';
-      setError(errorMsg);
-    }
-  };
+    const { token } = response.data;
+    localStorage.setItem('token', token);
+    navigate('/dashboard');
+  } catch (err) {
+    const errorMsg = err.response?.data || 'Error al conectar con el servidor';
+    setError(errorMsg);
+  }
+};
 
   return (
     <div className="login-page">
@@ -40,25 +40,25 @@ export default function Login() {
           <form onSubmit={handleSubmit} className="login-form">
             <div className="input-group">
               <label htmlFor="username" className="input-label">Número de empleado</label>
-              <input
+            <input
                 id="username"
-                type="text"
+              type="text"
                 className="login-input"
-                required
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
+              required
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
             </div>
             <div className="input-group">
               <label htmlFor="password" className="input-label">Contraseña</label>
-              <input
+            <input
                 id="password"
-                type="password"
+              type="password"
                 className="login-input"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
             </div>
             {error && <div className="login-error">{error}</div>}
             <button type="submit" className="login-button">

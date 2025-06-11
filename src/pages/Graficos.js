@@ -107,7 +107,7 @@ export default function Graficos() {
 
   return (
     <main className="content">
-      <div className="page-container">
+    <div className="page-container">
         <div className="page-header">
           <h1 className="page-title">Análisis de Residuos</h1>
           <button 
@@ -118,7 +118,7 @@ export default function Graficos() {
               <path d="M3 6h18M3 12h18M3 18h18" />
             </svg>
             <span>Filtros</span>
-          </button>
+        </button>
         </div>
 
         {mostrarFiltros && (
@@ -127,37 +127,37 @@ export default function Graficos() {
               <div className="filters-row">
                 <div className="filter-item">
                   <label className="filter-label">Fecha inicio</label>
-                  <input
-                    type="date"
+              <input
+                type="date"
                     className="filter-input"
-                    value={fechaInicio}
-                    onChange={(e) => setFechaInicio(e.target.value)}
+                value={fechaInicio}
+                onChange={(e) => setFechaInicio(e.target.value)}
                     placeholder="dd/mm/yyyy"
-                  />
+              />
                 </div>
 
                 <div className="filter-item">
                   <label className="filter-label">Fecha final</label>
-                  <input
-                    type="date"
+              <input
+                type="date"
                     className="filter-input"
-                    value={fechaFin}
-                    onChange={(e) => setFechaFin(e.target.value)}
+                value={fechaFin}
+                onChange={(e) => setFechaFin(e.target.value)}
                     placeholder="dd/mm/yyyy"
-                  />
+              />
                 </div>
-              </div>
+            </div>
 
               <div className="filter-item">
                 <label className="filter-label">Áreas</label>
                 <select 
                   className="filter-select"
-                  onClick={() => setMostrarDropdown(!mostrarDropdown)}
-                >
+                onClick={() => setMostrarDropdown(!mostrarDropdown)}
+              >
                   <option value="">Seleccionar áreas</option>
                 </select>
-                {mostrarDropdown && (
-                  <div className="area-dropdown">
+              {mostrarDropdown && (
+                <div className="area-dropdown">
                     <label className="area-checkbox">
                       <input
                         type="checkbox"
@@ -172,12 +172,12 @@ export default function Graficos() {
                           type="checkbox"
                           checked={areasSeleccionadas.includes(area)}
                           onChange={() => toggleArea(area)}
-                        />
+                      />
                         <span>{area}</span>
-                      </label>
-                    ))}
-                  </div>
-                )}
+                    </label>
+                  ))}
+                </div>
+              )}
               </div>
             </div>
           </div>
@@ -186,23 +186,23 @@ export default function Graficos() {
         <h2 className="chart-title">Proporción de Residuos por Área</h2>
 
         <div className="charts-container">
-          <div className="chart-section">
+        <div className="chart-section">
             <div className="chart-content">
-              <ResponsiveContainer width={400} height={400}>
-                <PieChart>
-                  <Pie
-                    data={datosPieChart}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={120}
+          <ResponsiveContainer width={400} height={400}>
+            <PieChart>
+              <Pie
+                data={datosPieChart}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius={120}
                     isAnimationActive={true}
-                  >
-                    {datosPieChart.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
+              >
+                {datosPieChart.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
                   <Tooltip 
                     formatter={(value) => `${value.toFixed(2)} ton`}
                     contentStyle={{
@@ -212,18 +212,18 @@ export default function Graficos() {
                       boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
                     }}
                   />
-                </PieChart>
-              </ResponsiveContainer>
+            </PieChart>
+          </ResponsiveContainer>
 
               <div className="chart-legend">
-                {datosPieChart.map((entry, index) => {
-                  const total = datosPieChart.reduce((sum, d) => sum + d.value, 0);
-                  const porcentaje = ((entry.value / total) * 100).toFixed(1);
-                  return (
+              {datosPieChart.map((entry, index) => {
+                const total = datosPieChart.reduce((sum, d) => sum + d.value, 0);
+                const porcentaje = ((entry.value / total) * 100).toFixed(1);
+                return (
                     <div key={index} className="legend-item">
-                      <span
+                    <span
                         className="legend-color"
-                        style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                      style={{ backgroundColor: COLORS[index % COLORS.length] }}
                       />
                       <span className="legend-text">
                         {entry.name}
@@ -232,17 +232,17 @@ export default function Graficos() {
                         </span>
                       </span>
                     </div>
-                  );
-                })}
+                );
+              })}
               </div>
-            </div>
           </div>
+        </div>
 
           <div className="chart-section">
             <h2 className="chart-title">Tendencia de Residuos por Área</h2>
             <div className="chart-content">
-              <ResponsiveContainer width="100%" height={400}>
-                <LineChart data={transformarParaLineChart()}>
+        <ResponsiveContainer width="100%" height={400}>
+          <LineChart data={transformarParaLineChart()}>
                   <XAxis 
                     dataKey="fecha"
                     tick={{ fill: '#05141f' }}
@@ -260,24 +260,24 @@ export default function Graficos() {
                       boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
                     }}
                   />
-                  <Legend />
-                  {areasUnicas.map((area, index) => (
-                    <Line
-                      key={area}
-                      type="monotone"
-                      dataKey={area}
-                      stroke={COLORS[index % COLORS.length]}
-                      strokeWidth={2}
+            <Legend />
+            {areasUnicas.map((area, index) => (
+              <Line
+                key={area}
+                type="monotone"
+                dataKey={area}
+                stroke={COLORS[index % COLORS.length]}
+                strokeWidth={2}
                       dot={{ r: 2 }}
                       activeDot={{ r: 6 }}
-                    />
-                  ))}
-                </LineChart>
-              </ResponsiveContainer>
+              />
+            ))}
+          </LineChart>
+        </ResponsiveContainer>
             </div>
           </div>
         </div>
       </div>
-    </main>
+      </main>
   );
 }
